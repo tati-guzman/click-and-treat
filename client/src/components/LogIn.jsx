@@ -1,7 +1,10 @@
 //Import necessary functionalities
-import React from 'react';
+import React, { useContext } from 'react';
+import ComponentContext from '../ComponentContext.js';
 
-const LogIn = ({ setComponent }) => {
+const LogIn = () => {
+
+    const { setComponent } = useContext(ComponentContext);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -11,26 +14,31 @@ const LogIn = ({ setComponent }) => {
         //If those are correct, switch the component of user dashboard with that user's info
         console.log(event.currentTarget.username.value);
 
+        const username = event.currentTarget.username.value;
 
-        if (event.currentTarget.username.value) {
+
+        if (username) {
             try {
-                const response = await fetch('/api/users/:username', {
+                const response = await fetch(`/api/users/${username}`, {
                     method: 'POST',
-                    body: event.currentTarget
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username })
                 });
 
                 if (!response.ok) {
                     throw new Error("Failed to check log in");
                 }
 
-                const logInStatus = await response.json();
+                const userStatus = await response.json();
 
-                if (logInStatus) {
+                if (userStatus.exists) {
                     //Log the user in
                     setComponent('dashboard');
                 } else {
                     //Client side error handling to ask them to try again
-
+                    console.log("Username does not exist.");
                 }
             } catch (error) {
                 console.error({ message: "Error checking user name", details: error });
@@ -48,8 +56,6 @@ const LogIn = ({ setComponent }) => {
                     id="username"
                     name="username"
                     type="text"
-                    // value={username}
-                    // onChange={handleUsernameChange}
                     required
                     />
 

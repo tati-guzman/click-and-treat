@@ -4,11 +4,13 @@ import React, { useState, useContext } from 'react';
 
 
 //Import all components for use in display
+import ComponentContext from './ComponentContext.js';
 import NavBar from './components/NavBar.jsx';
 import HomePage from './components/HomePage.jsx';
 import About from './components/About.jsx';
 import Examples from './components/Examples.jsx';
-import ComponentContext from './ComponentContext.js';
+import Dashboard from './components/Dashboard.jsx';
+
 //ADD COMPONENTS AND NAMES
 
 const App = () => {
@@ -31,7 +33,7 @@ const App = () => {
 
     return (
         <div className="app">
-            <ComponentContext.Provider value={{setComponent}}>
+            <ComponentContext.Provider value={{ setComponent }}>
               <NavBar />
 
               {chooseComponent(component)}

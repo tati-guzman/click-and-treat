@@ -2,7 +2,7 @@
 import React from 'react';
 import LogIn from './LogIn.jsx';
 
-const HomePage = ({ setComponent }) => {
+const HomePage = () => {
 
     return (
         <div>
@@ -11,7 +11,7 @@ const HomePage = ({ setComponent }) => {
             <h1>Header</h1>
             <p>Blurb about the site and dog training</p>
 
-            <LogIn setComponent={setComponent}/>
+            <LogIn />
 
         </div>
     )

@@ -16,8 +16,15 @@ app.use(express.json());
 //POST Route to create a new user
 //'/users'
 
-//May Delete: GET Route to check username and password
-//'/users'
+//May Delete: GET Route to check username and password by checking via username
+//'/users/:username'
+app.post('/api/users/:username', async (req, res) => {
+    console.log(req);
+    const { username } = req.params.username;
+
+    //Simulate checking for the username and returning that the username exists
+    res.json({ exists: true });
+})
 
 //GET Route to pull pet information for a particular user
 //'/pets/:user_id'
