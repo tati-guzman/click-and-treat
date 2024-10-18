@@ -10,8 +10,9 @@ import HomePage from './components/HomePage.jsx';
 import About from './components/About.jsx';
 import Examples from './components/Examples.jsx';
 import Dashboard from './components/Dashboard.jsx';
-
-//ADD COMPONENTS AND NAMES
+import AccountInformation from './components/AccountInformation.jsx';
+import SessionForm from './components/SessionForm.jsx';
+import HistoryList from './components/HistoryList.jsx';
 
 const App = () => {
     //State to hold displayed component
@@ -28,6 +29,13 @@ const App = () => {
                 return <Examples />;
             case 'dashboard':
                 return <Dashboard />;
+            case 'account info':
+                return <AccountInformation />;
+            case 'session form':
+                return <SessionForm />;
+            case 'history':
+                return <HistoryList />;
+            // Need to add default state based on the user log in status!
         }
     }
 
