@@ -4,7 +4,9 @@ import React from 'react';
 const UserInfoForm = () => {
 
     return (
-        <h1>User Info Form</h1>
+        <div>
+            <h1>User Info Form</h1>
+        </div>
     )
 }
 

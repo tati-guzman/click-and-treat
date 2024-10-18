@@ -4,7 +4,9 @@ import React from 'react';
 const ConnectionForm = () => {
 
     return (
-        <h1>ConnectionForm</h1>
+        <div>
+            <h1>ConnectionForm</h1>
+        </div>
     )
 }
 

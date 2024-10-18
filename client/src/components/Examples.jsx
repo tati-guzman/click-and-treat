@@ -4,7 +4,9 @@ import React from 'react';
 const Examples = () => {
 
     return (
-        <h1>Examples</h1>
+        <div>
+            <h1>Examples</h1>
+        </div>
     )
 }
 

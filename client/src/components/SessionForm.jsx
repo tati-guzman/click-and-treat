@@ -4,7 +4,9 @@ import React from 'react';
 const SessionForm = () => {
 
     return (
-        <h1>Session Form</h1>
+        <div>
+            <h1>Session Form</h1>
+        </div>
     )
 }
 

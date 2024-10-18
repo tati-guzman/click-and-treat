@@ -4,7 +4,9 @@ import React from 'react';
 const AccountInformation = () => {
 
     return (
-        <h1>Account Information</h1>
+        <div>
+            <h1>Account Information</h1>
+        </div>
     )
 }
 

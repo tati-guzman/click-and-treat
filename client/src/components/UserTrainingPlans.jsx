@@ -4,7 +4,9 @@ import React from 'react';
 const UserTrainingPlans = () => {
 
     return (
-        <h1>User Training Plans</h1>
+        <div>
+            <h1>User Training Plans</h1>
+        </div>
     )
 }
 
