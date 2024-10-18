@@ -1,8 +1,11 @@
 //Import necessary functionalities
-import React from 'react';
+import React, { useContext } from 'react';
+import ComponentContext from '../ComponentContext.js';
 
-const NavBar = ({ setComponent }) => {
+const NavBar = ({ }) => {
 
+    const { setComponent } = useContext(ComponentContext);
+    
     return (
         <nav>
             
