@@ -9,7 +9,7 @@ const NavBar = ({ setComponent }) => {
             <h1 onClick={() => setComponent('homepage')}>Click and Treat</h1>
             
             <button onClick={() => setComponent('about')}>About</button>
-            <button onClick={() => setComponent('form')}>Create a Post</button>
+            <button onClick={() => setComponent('examples')}>Example Training Plans</button>
 
         </nav>
     )

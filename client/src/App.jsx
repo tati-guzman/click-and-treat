@@ -4,6 +4,9 @@ import React, { useState } from 'react';
 
 //Import all components for use in display
 import NavBar from './components/NavBar.jsx';
+import HomePage from './components/HomePage.jsx';
+import About from './components/About.jsx';
+import Examples from './components/Examples.jsx';
 //ADD COMPONENTS AND NAMES
 
 const App = () => {
@@ -14,7 +17,13 @@ const App = () => {
     const chooseComponent = (component) => {
         switch (component) {
             case 'homepage':
-                return <HomePage />;
+                return <HomePage setComponent={setComponent} />;
+            case 'about':
+                return <About />;
+            case 'examples':
+                return <Examples />;
+            case 'dashboard':
+                return <Dashboard />;
         }
     }
 
