@@ -1,0 +1,20 @@
+{
+  "type": "module",
+  "scripts": {
+    "dev": " concurrently 'npm start' 'cd .. && cd client && npm run dev' ",
+    "start": "nodemon server.js",
+    "server": "nodemon server.js"
+  },
+  "dependencies": {
+    "concurrently": "^9.0.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "pg": "^8.13.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "nodemon": "^3.1.7"
+  }
+}
