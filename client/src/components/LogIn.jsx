@@ -46,6 +46,9 @@ const LogIn = () => {
             } catch (error) {
                 console.error({ message: "Error checking user name", details: error });
             }
+        } else {
+            //Placeholder alert for temporary error handling - will implement robust form error handling while building out full log in component in Week 2
+            alert("Please make sure to enter a username.");
         }
 
     }
