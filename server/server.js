@@ -53,6 +53,63 @@ app.post('/api/users/', async (req, res) => {
 //POST Route to create a new association between two members (stretch goal)
 //'/family'
 
+//Third Party API Calls (3)
+
+//GET request to fetch the motivational quote of the day
+app.get('/quotes/daily', async (req, res) => {
+    const url = 'https://zenquotes.io/api/today/';
+
+    console.log("Fetching quote of the day!");
+    //Server will fetch the quote from the url
+    fetch(url)
+        //Response is parsed into json format
+        .then((res) => res.json())
+        //JSON is sent to the front end
+        .then((quote) => res.send(quote))
+        //If there is an error, the details will be logged to the console FOR NOW
+            //This needs to be updated to have better error handling
+        .catch((err) => {
+            console.error({ error: "Something went wrong fetching the quote of the day", details: err });
+        })
+})
+
+//GET request to fetch a list of motivational quotes
+app.get('/quotes/list', async (req, res) => {
+    const url = 'https://zenquotes.io/api/quotes/';
+    
+    console.log("Fetching list of quotes!");
+
+    //Server will fetch the quotes from the url
+    fetch(url)
+        //Response is parsed into json format
+        .then((res) => res.json())
+        //JSON is sent to the front end
+        .then((quote) => res.send(quote))
+        //If there is an error, the details will be logged to the console FOR NOW
+            //This needs to be updated to have better error handling
+        .catch((err) => {
+            console.error({ error: "Something went wrong fetching the list of quotes", details: err });
+        })
+})
+
+//GET request to fetch a single random quote
+app.get('/quotes/random', async (req, res) => {
+    const url = 'https://zenquotes.io/api/random/';
+
+    console.log("Fetching single random quote!");
+    //Server will fetch the quote from the url
+    fetch(url)
+        //Response is parsed into json format
+        .then((res) => res.json())
+        //JSON is sent to the front end
+        .then((quote) => res.send(quote))
+        //If there is an error, the details will be logged to the console FOR NOW
+            //This needs to be updated to have better error handling
+        .catch((err) => {
+            console.error({ error: "Something went wrong fetching a quote!", details: err });
+        })
+})
+
 //Print PORT location when active PORT is detected (server is running properly)
 app.listen(PORT, () => {
     console.log(`Server is listening on PORT: ${PORT}`);
