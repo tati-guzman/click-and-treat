@@ -22,7 +22,7 @@ const LogIn = () => {
         //If on submission, there is a username submitted, send it to the server to check its existence
         if (username) {
             try {
-                const response = await fetch(`/api/users/${username}`, {
+                const response = await fetch('/api/users/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
