@@ -13,6 +13,6 @@ services:
           property: connectionString
 
 databases:
-  - name: clickandtreat
+  - name: db
     plan: free
     ipAllowList: []
