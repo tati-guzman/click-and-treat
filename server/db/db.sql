@@ -225,40 +225,30 @@ ALTER TABLE ONLY public.users ALTER COLUMN user_id SET DEFAULT nextval('public.u
 -- Data for Name: family; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.family (family_id, user_id_primary, pet_id, user_id_secondary) FROM stdin;
-\.
 
 
 --
 -- Data for Name: pets; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.pets (pet_id, name, species) FROM stdin;
-\.
 
 
 --
 -- Data for Name: plans; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.plans (plan_id, title, description, stages, public) FROM stdin;
-\.
 
 
 --
 -- Data for Name: sessions; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.sessions (session_id, date, stage, tasks, notes, proceed, draft, pet_id, user_id, plan_id) FROM stdin;
-\.
 
 
 --
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.users (user_id, name, email, password) FROM stdin;
-\.
 
 
 --
