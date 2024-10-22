@@ -1,6 +1,7 @@
 //Import frameworks for app
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
 
 //Import database connection
 import db from './db/db-connection.js';
@@ -10,6 +11,13 @@ const app = express();
 const PORT = process.env.PORT || 8030;
 app.use(cors());
 app.use(express.json());
+
+//For deployment: Serve static build files from React
+app.use(express.static(path.join(__dirname, '../client/build')));
+//For deployment: Ensure all routes are served the index.html file to allow React to manage the routing
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/build', 'index.html'))
+})
 
 //All Planned Routes
 
