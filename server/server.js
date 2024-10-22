@@ -20,11 +20,11 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 //PROD: Serve static build files from React
-app.use(express.static(path.join(__dirname, '../client/build')));
+app.use(express.static(path.join(__dirname, '../client/dist')));
 
 //PROD: Ensure all routes are served the index.html file to allow React to manage the routing
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/build', 'index.html'))
+    res.sendFile(path.join(__dirname, '../client/dist', 'index.html'))
 })
 
 //All Planned Routes
