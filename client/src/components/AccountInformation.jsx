@@ -1,5 +1,5 @@
 //Import necessary functionalities and components
-import React from 'react';
+import React, { useContext } from 'react';
 import PetInfoForm from './PetInfoForm';
 import ConnectionForm from './ConnectionForm';
 import UserInfoForm from './UserInfoForm';

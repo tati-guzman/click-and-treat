@@ -1,5 +1,5 @@
 //Import necessary functionalities
-import React from 'react';
+import React, { useContext } from 'react';
 import UserComponentContext from '../UserComponentContext';
 
 const HistoryList = () => {
