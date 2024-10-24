@@ -1,6 +1,6 @@
 //Import necessary functionalities
 import React from 'react';
-import LogIn from './LogIn.jsx';
+// import LogIn from './LogIn.jsx';
 
 const HomePage = () => {
 
@@ -13,7 +13,7 @@ const HomePage = () => {
             <h1>Header</h1>
             <p>Blurb about the site and dog training</p>
 
-            <LogIn />
+            {/* <LogIn /> */}
 
         </div>
     )
