@@ -4,7 +4,17 @@ import PetInfoForm from './PetInfoForm';
 import ConnectionForm from './ConnectionForm';
 import UserInfoForm from './UserInfoForm';
 
+//Import user context to pass appropriate props to each form
+import UserComponentContext from '../UserComponentContext';
+
 const AccountInformation = () => {
+
+    //Import display and user settings to use in display control and user updates
+    const { display, user } = useContext(UserComponentContext);
+    const [component, setComponent] = display;
+    //Need to pull appropriate information for each form from user data
+    const [loggedUser, setLoggedUser] = user;
+
 
     return (
         <div>

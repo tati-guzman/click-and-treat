@@ -1,13 +1,16 @@
 //Import necessary functionalities
 import React, { useContext } from 'react';
-import ComponentContext from '../ComponentContext.js';
+import UserComponentContext from '../UserComponentContext.js';
 
 //Import log in component to hang out in the upper right hand corner of the page
 import LogIn from './LogIn.jsx';
 
 const NavBar = ({ }) => {
 
-    const { setComponent } = useContext(ComponentContext);
+    //Import display and user settings to use in display control and user updates
+    const { display, user } = useContext(UserComponentContext);
+    const [component, setComponent] = display;
+    const [loggedUser, setLoggedUser] = user;
 
     return (
         <nav>

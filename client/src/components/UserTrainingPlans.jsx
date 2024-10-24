@@ -1,10 +1,13 @@
 //Import necessary functionalities
 import React, { useContext, useState } from 'react';
-import ComponentContext from '../ComponentContext.js';
+import UserComponentContext from '../UserComponentContext.js';
 
 const UserTrainingPlans = () => {
     
-    const { setComponent } = useContext(ComponentContext);
+    //Import display and user settings to use in display control and user updates
+    const { display, user } = useContext(UserComponentContext);
+    const [component, setComponent] = display;
+    const [loggedUser, setLoggedUser] = user;
 
     //Will need to pull all training plan information for this particular user via server GET request
     //Hold training plan info in state

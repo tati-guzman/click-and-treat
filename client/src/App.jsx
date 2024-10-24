@@ -4,7 +4,7 @@ import React, { useState, useContext } from 'react';
 
 
 //Import all components for use in display
-import ComponentContext from './ComponentContext.js';
+import ComponentContext from './UserComponentContext.js';
 import NavBar from './components/NavBar.jsx';
 import HomePage from './components/HomePage.jsx';
 import About from './components/About.jsx';
@@ -17,6 +17,9 @@ import HistoryList from './components/HistoryList.jsx';
 const App = () => {
     //State to hold displayed component
     const [component, setComponent] = useState('homepage');
+
+    //State to hold logged in user status and data
+    const [loggedUser, setLoggedUser] = useState(null);
 
     //Function to switch between components - change to React Router!
     const chooseComponent = (component) => {
@@ -41,7 +44,7 @@ const App = () => {
 
     return (
         <div className="app">
-            <ComponentContext.Provider value={{ setComponent }}>
+            <ComponentContext.Provider value={{ display: [component, setComponent], user: [loggedUser, setLoggedUser] }}>
               <NavBar />
 
               {chooseComponent(component)}

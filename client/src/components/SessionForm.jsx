@@ -1,10 +1,13 @@
 //Import necessary functionalities
 import React, { useState, useContext } from 'react';
-import ComponentContext from '../ComponentContext.js';
+import UserComponentContext from '../UserComponentContext.js';
 
 const SessionForm = () => {
 
-    const { setComponent } = useContext(ComponentContext);
+    //Import display and user settings to use in display control and user updates
+    const { display, user } = useContext(UserComponentContext);
+    const [component, setComponent] = display;
+    const [loggedUser, setLoggedUser] = user;
 
     //State to hold information about which stage the pet is in for the trick being trained
     const [skillStatus, setSkillStatus] = useState(null);

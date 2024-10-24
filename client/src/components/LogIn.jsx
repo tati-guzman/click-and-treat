@@ -1,10 +1,12 @@
 //Import necessary functionalities
 import React, { useContext } from 'react';
-import ComponentContext from '../ComponentContext.js';
+import UserComponentContext from '../UserComponentContext.js';
 
 const LogIn = () => {
-    //Import the setComponent function to use in display control
-    const { setComponent } = useContext(ComponentContext);
+    //Import display and user settings to use in display control and user updates
+    const { display, user } = useContext(UserComponentContext);
+    const [component, setComponent] = display;
+    const [loggedUser, setLoggedUser] = user;
 
     const handleSubmit = async (event) => {
         event.preventDefault();

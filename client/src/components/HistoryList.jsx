@@ -1,7 +1,13 @@
 //Import necessary functionalities
 import React from 'react';
+import UserComponentContext from '../UserComponentContext';
 
 const HistoryList = () => {
+
+    //Import display and user settings to use in display control and user specific info pulls
+    const { display, user } = useContext(UserComponentContext);
+    const [component, setComponent] = display;
+    const [loggedUser, setLoggedUser] = user;
 
     //Use the sessions state to map through each of the sessions for display
 
