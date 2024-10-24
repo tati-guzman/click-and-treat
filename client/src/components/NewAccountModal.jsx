@@ -11,53 +11,22 @@ const NewAccountModal = ({ isOpen, onClose }) => {
     const [component, setComponent] = display;
     const [loggedUser, setLoggedUser] = user;
 
+    //Need to create handleSubmit function to create new user account with submitted form information
+
+    // const handleSubmit = async (event) => {
+    //     event.preventDefault();
+    //     // debugger;
+
+    //     //POST form data to server/database and return new user id!
     
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        // debugger;
+    //     //Error handling - do not clear form data if there is an error but display info for the user
 
-        //Check log in credentials
-        //If those are correct, switch the component of user dashboard with that user's info
-        console.log(event.currentTarget.username.value);
+    //     //IF THE POST REQUEST IS SUCCESSFUL:
+    //     //setLoggedUser(the returned user id)
+    //     //setComponent('dashboard')
+    //     //onClose();
 
-        //Set the value of the username input field to be stored in username variable
-        const username = event.currentTarget.username.value;
-
-        //Future Plans: Add in password functionality
-
-        //If on submission, there is a username submitted, send it to the server to check its existence
-        if (username) {
-            try {
-                const response = await fetch('/api/users/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ username })
-                });
-
-                if (!response.ok) {
-                    throw new Error("Failed to check log in");
-                }
-
-                const userStatus = await response.json();
-
-                if (userStatus.exists) {
-                    //Log the user in and change the view to show user dashboard
-                    setComponent('dashboard');
-                } else {
-                    //Client side error handling to ask them to try again - need to update
-                    console.log("Username does not exist.");
-                }
-            } catch (error) {
-                console.error({ message: "Error checking user name", details: error });
-            }
-        } else {
-            //Placeholder alert for temporary error handling - will implement robust form error handling while building out full log in component in Week 2
-            alert("Please make sure to enter a username.");
-        }
-
-    }
+    // }
 
 
     
