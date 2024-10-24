@@ -12,17 +12,24 @@ const NavBar = ({ }) => {
     const [component, setComponent] = display;
     const [loggedUser, setLoggedUser] = user;
 
+    //Logout function to remove logged user and return to homepage
+    const logout = () => {
+        setLoggedUser(null);
+        setComponent('homepage');
+    }
+
     return (
         <nav>
             {/* Replace header with logo in the future */}
-            <h1 onClick={() => setComponent('homepage')}>Click and Treat</h1>
+            <h1 onClick={() => loggedUser ? setComponent('dashboard') : setComponent('homepage')}>Click and Treat</h1>
             
             {/* Potentially just change into links rather than buttons */}
             <button onClick={() => setComponent('about')}>About</button>
             <button onClick={() => setComponent('examples')}>Example Training Plans</button>
 
-            <LogIn />
-
+            {loggedUser 
+            ? <button onClick={logout}>Log Out</button>
+            : <LogIn />}
         </nav>
     )
 }
