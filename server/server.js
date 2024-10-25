@@ -32,7 +32,7 @@ app.use(express.json());
 //POST Route to create a new user
 //'/users'
 
-//May Delete: POST Route to check log in by checking username (using for testing only)
+//POST Route to check log in by checking username (using for testing only)
 app.post('/api/users/', async (req, res) => {
     console.log("Pulling user id");
 
@@ -51,7 +51,7 @@ app.post('/api/users/', async (req, res) => {
 
         //Error handling if it gets stuck here
         if (userDetails.rows.length === 0) {
-            res.status(404).json({ error: "User details not found." })
+            res.status(404).json({ exists: false, error: "User details not found." })
         }
 
         const userID = userDetails.rows[0].user_id;
@@ -65,6 +65,46 @@ app.post('/api/users/', async (req, res) => {
 
 //GET Route to pull pet information for a particular user
 //'/pets/:user_id'
+app.get('/api/pets/:user_id', async (req, res) => {
+    console.log('Pulling pet information');
+    console.log('Parameters', req.params);
+
+    try {
+        //Pull User ID from the parameters
+        const userID = req.params.user_id;
+
+        //Query to pull all pet ids that have this user listed as a primary or secondary user
+        const petIDquery = 'SELECT pet_id FROM family WHERE user_id_primary = $1 OR user_id_secondary = $1';
+        const petListData = await db.query(petIDquery, [userID]);
+
+        //Make sure there are pets associated with this account
+        if (petListData.rowCount === 0) {
+            res.json({ pets: false });
+        }
+
+        //Convert the returned data into an array of IDs
+        //petListData [{pet_id: 1, pet_id: 2}] -> petListArray [1, 2]
+        const petListArray = petListData.rows.map((row => row.pet_id));
+       
+        //Compile query string with array of pet ids to check
+        const petInfoQuery = `SELECT * FROM pets WHERE pet_id IN (${petListArray})`;
+        
+        //Query database for information
+        const petInfo = await db.query(petInfoQuery);
+
+        if (petInfo.rowCount === 0) {
+            res.json({ pets: false });
+        } else {
+            //Send back all the information pulled from the pets table
+            res.json(petInfo.rows);
+        }
+
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Unable to pull pet information", details: error });
+    }
+})
 
 //GET Route to pull all session data for each training plan
 //'/sessions/history/:plan_id'
