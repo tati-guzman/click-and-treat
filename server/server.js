@@ -3,8 +3,8 @@ import express from 'express';
 import cors from 'cors';
 
 //PROD: Import frameworks for deployment
-import path, { dirname } from 'path';
-import { fileURLToPath } from 'url';
+// import path, { dirname } from 'path';
+// import { fileURLToPath } from 'url';
 
 //Import database connection
 import db from './db/db-connection.js';
@@ -16,30 +16,51 @@ app.use(cors());
 app.use(express.json());
 
 //PROD: Construct path to build folder in ES Modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = dirname(__filename);
 
 //PROD: Serve static build files from React
-app.use(express.static(path.join(__dirname, '../client/dist')));
+// app.use(express.static(path.join(__dirname, '../client/dist')));
 
 //PROD: Ensure all routes are served the index.html file to allow React to manage the routing
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/dist', 'index.html'))
-})
+// app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname, '../client/dist', 'index.html'))
+// })
 
 //All Planned Routes
 
 //POST Route to create a new user
 //'/users'
 
-//May Delete: GET Route to check username and password by checking via username
-//'/users/:username'
+//May Delete: POST Route to check log in by checking username (using for testing only)
 app.post('/api/users/', async (req, res) => {
-    console.log(req);
-    // const { username } = req.params.username;
+    console.log("Pulling user id");
 
-    //Simulate checking for the username and returning that the username exists
-    res.json({ exists: true });
+    try {
+        //Print request into console
+        // console.log(req);
+
+        //Pull username from request
+        const { username } = req.body;
+
+        //Structure database query
+        const query = 'SELECT user_id FROM users WHERE name=$1';
+
+        //Send query to pull user id of the test user
+        const userDetails = await db.query(query, [username]);
+
+        //Error handling if it gets stuck here
+        if (userDetails.rows.length === 0) {
+            res.status(404).json({ error: "User details not found." })
+        }
+
+        const userID = userDetails.rows[0].user_id;
+
+        res.json({ exists: true, userID: userID });
+
+    } catch (error) {
+        res.status(500).json({ error: "Could not log in", details: error });
+    }
 })
 
 //GET Route to pull pet information for a particular user
