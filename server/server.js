@@ -65,13 +65,13 @@ app.post('/api/users/', async (req, res) => {
 
 //GET Route to pull pet information for a particular user
 //'/api/pets/:user_id'
-app.get('/api/pets/:user_id', async (req, res) => {
+app.get('/api/pets/:userId', async (req, res) => {
     console.log('Pulling pet information');
     console.log('Parameters', req.params);
 
     try {
         //Pull User ID from the parameters
-        const userId = req.params.user_id;
+        const userId = req.params.userId;
 
         //Query to pull all pet ids that have this user listed as a primary or secondary user
         const petIdQuery = 'SELECT pet_id FROM family WHERE user_id_primary = $1 OR user_id_secondary = $1';
@@ -118,37 +118,78 @@ app.get('/api/pets/:user_id', async (req, res) => {
 //'/users/:user_id'
 
 //POST Route to create a new pet
-//'/pets'
+//'/api/pets'
+app.post('/api/pets/:userId', async (req, res) => {
+    //Print message to console to use for troubleshooting
+    console.log("Creating new pet!");
+
+    try {
+        //Pull name and species of new pet from request body
+        const name = req.body.petName;
+        const species = req.body.species;
+
+        //Create query string that creates a new row in the pets table
+        const newPetQuery = 'INSERT INTO pets (name, species) VALUES ($1, $2) RETURNING pet_id';
+        const addPet = await db.query(newPetQuery, [name, species]);
+
+        //Error handling in case the new record could not be created
+        if (addPet.rowCount < 1) {
+            throw new Error ("Error creating new pet");
+        } else {
+            //If the record is created, it should return the new pet_id
+            const petId = addPet.rows[0].pet_id;
+
+            //Pull the userId from the original request parameters
+            const userId = req.params.userId;
+
+            //Use the petId and userId to create a new family record for this user and this pet
+            const newFamilyQuery = 'INSERT INTO family (user_id_primary, pet_id) VALUES ($1, $2)';
+            const familyConnection = await db.query(newFamilyQuery, [userId, petId]);
+
+            //Error handling in case new family connection could not be created
+            if (familyConnection.rowCount < 1) {
+                throw new Error ("Error establishing family connection");
+            } else {
+                //Send back petId to client
+                res.send({ petId: petId });
+            }
+        }
+    } catch {
+        res.status(500).json({ error: "Unable to create new pet", details: error });
+    }
+})
 
 //PUT Route to update pet information
-//'/pets/:pet_id
+//'/api/pets/:pet_id
 
 //DELETE Route to delete a pet
-//'/pets/:pet_id
+//'/api/pets/:pet_id
 
 //PUT Route to create a new association between two members (stretch goal)
 //'/api/family/'
 app.put('/api/family', async (req, res) => {
+    //Print message to console for potential troubleshooting
     console.log("Creating family connection!");
 
     try {
-        console.log("Req body");
-        console.log(req.body);
-
+        //Pull all relevant ID's from request body
         const primaryUser = req.body.primaryUserId;
         const secondaryUser = req.body.secondaryUserId;
         const pet = req.body.petId;
 
+        //Create database query string using request body variables
         const addConnectionQuery = `UPDATE family SET user_id_secondary = ${secondaryUser} WHERE user_id_primary = ${primaryUser} AND pet_id = ${pet}`
 
+        //Send query to database to add in the secondary user
         const connectionRequest = await db.query(addConnectionQuery);
         
+        //Error handling in case the query is not successful
         if(connectionRequest.rowCount < 1) {
             throw new Error("Error updating table");
         } else {
+            //Send back 200 OK status to end route
             res.status(200).json();
         }
-
     } catch (error) {
         res.status(500).json({ error: "Unable to create row in family table", details: error });
     }
