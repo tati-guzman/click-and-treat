@@ -32,7 +32,7 @@ app.use(express.json());
 //POST Route to create a new user
 //'/users'
 
-//POST Route to check log in by checking username (using for testing only)
+//POST Route to check log in by checking username (using for testing only) - Also use for family connection!
 app.post('/api/users/', async (req, res) => {
     console.log("Pulling user id");
 
@@ -54,9 +54,9 @@ app.post('/api/users/', async (req, res) => {
             res.status(404).json({ exists: false, error: "User details not found." })
         }
 
-        const userID = userDetails.rows[0].user_id;
+        const userId = userDetails.rows[0].user_id;
 
-        res.json({ exists: true, userID: userID });
+        res.json({ exists: true, userId: userId });
 
     } catch (error) {
         res.status(500).json({ error: "Could not log in", details: error });
@@ -64,18 +64,18 @@ app.post('/api/users/', async (req, res) => {
 })
 
 //GET Route to pull pet information for a particular user
-//'/pets/:user_id'
+//'/api/pets/:user_id'
 app.get('/api/pets/:user_id', async (req, res) => {
     console.log('Pulling pet information');
     console.log('Parameters', req.params);
 
     try {
         //Pull User ID from the parameters
-        const userID = req.params.user_id;
+        const userId = req.params.user_id;
 
         //Query to pull all pet ids that have this user listed as a primary or secondary user
-        const petIDquery = 'SELECT pet_id FROM family WHERE user_id_primary = $1 OR user_id_secondary = $1';
-        const petListData = await db.query(petIDquery, [userID]);
+        const petIdQuery = 'SELECT pet_id FROM family WHERE user_id_primary = $1 OR user_id_secondary = $1';
+        const petListData = await db.query(petIdQuery, [userId]);
 
         //Make sure there are pets associated with this account
         if (petListData.rowCount === 0) {
@@ -105,7 +105,8 @@ app.get('/api/pets/:user_id', async (req, res) => {
 })
 
 //GET Route to pull all session data for each training plan
-//'/sessions/history/:plan_id'
+//'/api/sessions/history/:plan_id'
+
 
 //POST Route to submit information for a new session
 //'/sessions'
@@ -125,11 +126,36 @@ app.get('/api/pets/:user_id', async (req, res) => {
 //DELETE Route to delete a pet
 //'/pets/:pet_id
 
-//POST Route to create a new association between two members (stretch goal)
-//'/family'
+//PUT Route to create a new association between two members (stretch goal)
+//'/api/family/'
+app.put('/api/family', async (req, res) => {
+    console.log("Creating family connection!");
 
-//Third Party API Calls (3)
+    try {
+        console.log("Req body");
+        console.log(req.body);
 
+        const primaryUser = req.body.primaryUserId;
+        const secondaryUser = req.body.secondaryUserId;
+        const pet = req.body.petId;
+
+        const addConnectionQuery = `UPDATE family SET user_id_secondary = ${secondaryUser} WHERE user_id_primary = ${primaryUser} AND pet_id = ${pet}`
+
+        const connectionRequest = await db.query(addConnectionQuery);
+        
+        if(connectionRequest.rowCount < 1) {
+            throw new Error("Error updating table");
+        } else {
+            res.status(200).json();
+        }
+
+    } catch (error) {
+        res.status(500).json({ error: "Unable to create row in family table", details: error });
+    }
+})
+
+
+//********** Third Party API Calls (3) **********
 //GET request to fetch the motivational quote of the day
 app.get('/quotes/daily', async (req, res) => {
     const url = 'https://zenquotes.io/api/today/';
