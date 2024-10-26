@@ -119,7 +119,7 @@ app.get('/api/pets/:userId', async (req, res) => {
 
 //POST Route to create a new pet
 //'/api/pets'
-app.post('/api/pets/:userId', async (req, res) => {
+app.post('/api/pets/new/:userId', async (req, res) => {
     //Print message to console to use for troubleshooting
     console.log("Creating new pet!");
 
@@ -160,7 +160,34 @@ app.post('/api/pets/:userId', async (req, res) => {
 })
 
 //PUT Route to update pet information
-//'/api/pets/:pet_id
+//'/api/pets/:pet_id'
+app.put('/api/pets/update/:petId', async (req, res) => {
+    console.log("Updating this pet's information!");
+
+    try {
+        //Pull petId from parameters
+        const petId = req.params.petId;
+
+        //Pull updated information from request body
+        const petName = req.body.petName;
+        const species = req.body.species;
+
+        //Compile query string to update all information
+        const updatePetQuery = `UPDATE pets SET name = '${petName}', species = '${species}' WHERE pet_id = '${petId}' RETURNING *`;
+
+        //Send query to database to update info
+        const updatedPetInfo = await db.query(updatePetQuery);
+
+        //Error handling - all information should be returned
+        if (updatedPetInfo.rowCount < 1) {
+            throw new Error ("Error retrieving all updated information");
+        } else {
+            res.send(updatedPetInfo.rows);
+        }
+    } catch (error) {
+        res.status(500).json({ error: "Unable to update pet", details: error });
+    }
+})
 
 //DELETE Route to delete a pet
 //'/api/pets/:pet_id
