@@ -191,6 +191,26 @@ app.put('/api/pets/update/:petId', async (req, res) => {
 
 //DELETE Route to delete a pet
 //'/api/pets/:pet_id
+app.delete('/api/pets/delete/:petId', async (req, res) => {
+    console.log("Sadly deleting this pet now!");
+
+    try {
+        //Pull Pet ID from parameters
+        const petId = req.params.petId;
+
+        //Create query to delete this pet id
+        const deletePetQuery = `DELETE FROM pets WHERE pet_id = '${petId}'`;
+        const deletedPet = await db.query(deletePetQuery);
+
+        if (deletedPet.rowCount < 1) {
+            throw new Error ("Error deleting pet from database");
+        } else {
+            res.status(200).send();
+        }
+    } catch (error) {
+        res.status(500).json({ error: "Unable to delete pet", details: error });
+    }
+})
 
 //PUT Route to create a new association between two members (stretch goal)
 //'/api/family/'
