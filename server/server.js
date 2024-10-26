@@ -79,7 +79,7 @@ app.get('/api/pets/:user_id', async (req, res) => {
 
         //Make sure there are pets associated with this account
         if (petListData.rowCount === 0) {
-            res.json({ pets: false });
+            res.json([{ pets: false }]);
         }
 
         //Convert the returned data into an array of IDs
@@ -92,16 +92,14 @@ app.get('/api/pets/:user_id', async (req, res) => {
         //Query database for information
         const petInfo = await db.query(petInfoQuery);
 
+        //Second layer of finding no pets associated with account
         if (petInfo.rowCount === 0) {
-            res.json({ pets: false });
+            res.json([{ pets: false }]);
         } else {
             //Send back all the information pulled from the pets table
-            res.json(petInfo.rows);
+            res.json([{ pets: true }, ...petInfo.rows]);
         }
-
-        
     } catch (error) {
-        console.log(error);
         res.status(500).json({ error: "Unable to pull pet information", details: error });
     }
 })
