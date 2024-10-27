@@ -148,6 +148,27 @@ app.post('/api/sessions',async (req, res) => {
 //PUT Route to edit session information (stretch goal)
 //'/sessions/:session_id'
 
+//DELETE Route to delete a session
+app.delete('/api/sessions/:sessionId', async (req, res) => {
+    console.log("Deleting session!");
+
+    try {
+        //Pull Session ID from parameters
+        const sessionId = req.params.sessionId;
+
+        //Create query to delete this pet id
+        const deleteSessionQuery = `DELETE FROM sessions WHERE session_id = '${sessionId}'`;
+        const deletedSession = await db.query(deleteSessionQuery);
+
+        if (deletedSession.rowCount < 1) {
+            throw new Error ("Error deleting session from database");
+        } else {
+            res.status(200).send();
+        }
+    } catch (error) {
+        res.status(500).json({ error: "Unable to delete session", details: error });
+    }
+})
 
 //PUT Route to edit user information
 //'/users/:user_id'
