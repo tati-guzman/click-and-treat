@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import LogInModal from './LogInModal.jsx';
 import NewAccountModal from './NewAccountModal.jsx';
 
-const LogIn = () => {
+const LogIn = ({ loggedUser, setLoggedUser }) => {
     
     //State to hold display status of both modals
     const [logInModal, setLogInModal] = useState(false);
@@ -17,7 +17,7 @@ const LogIn = () => {
             <button onClick={()=> setLogInModal(true)}>Log In</button>
             <button onClick={()=> setNewAccountModal(true)}>Create an Account</button>
 
-            {logInModal && <LogInModal isOpen={logInModal} onClose={() => setLogInModal(false)}/>}
+            {logInModal && <LogInModal isOpen={logInModal} onClose={() => setLogInModal(false)} loggedUser={loggedUser} setLoggedUser={setLoggedUser}/>}
             {newAccountModal && <NewAccountModal isOpen={newAccountModal} onClose={() => setNewAccountModal(false)}/>}
             
         </div>
