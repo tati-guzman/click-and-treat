@@ -64,7 +64,6 @@ app.post('/api/users/', async (req, res) => {
 })
 
 //GET Route to pull pet information for a particular user
-//'/api/pets/:user_id'
 app.get('/api/pets/:userId', async (req, res) => {
     console.log('Pulling pet information');
     console.log('Parameters', req.params);
@@ -104,21 +103,57 @@ app.get('/api/pets/:userId', async (req, res) => {
     }
 })
 
+//POST Route to create new training plan (stretch goal)
+
 //GET Route to pull all session data for each training plan
 //'/api/sessions/history/:plan_id'
 
 
 //POST Route to submit information for a new session
-//'/sessions'
+//'/sessions/:userId'
+app.post('/api/sessions',async (req, res) => {
+    console.log("Creating new session record woohoo");
+
+    try {
+        //Pull all fields from request
+        const fields = Object.keys(req.body);
+
+        //Map into a string with field names and replace camel case with PSQL naming
+        const fieldQueryInsert = fields.map((field) => `${field.replace("Id", "_id")}`).join(", ");
+
+        //Pull out values from request body
+        const values = Object.values(req.body);
+
+        //Create placeholders for each value
+        const placeholders = values.map((_,index) => `$${index + 1}`).join(", ");
+
+        //Compile query statement with field names and value placeholders
+        const newSessionQuery = `INSERT INTO sessions (${fieldQueryInsert}) VALUES (${placeholders})`;
+
+        //Send request to database with values array
+        const newSessionInfo = await db.query(newSessionQuery, values);
+
+        //Error handling - if no response, send error
+        if (newSessionInfo.rowCount < 1) {
+            throw new Error ("Error creating session");
+        } else {
+            //Otherwise, send Status 200 OK
+            res.status(200).send();
+        }
+    } catch (error) {
+        res.status(500).json({ error: "Unable to record this session's details", details: error});
+    }
+})
 
 //PUT Route to edit session information (stretch goal)
 //'/sessions/:session_id'
 
+
 //PUT Route to edit user information
 //'/users/:user_id'
+//This will be created once log in is established and we can create users.
 
 //POST Route to create a new pet
-//'/api/pets'
 app.post('/api/pets/new/:userId', async (req, res) => {
     //Print message to console to use for troubleshooting
     console.log("Creating new pet!");
@@ -160,7 +195,6 @@ app.post('/api/pets/new/:userId', async (req, res) => {
 })
 
 //PUT Route to update pet information
-//'/api/pets/:pet_id'
 app.put('/api/pets/update/:petId', async (req, res) => {
     console.log("Updating this pet's information!");
 
@@ -190,7 +224,6 @@ app.put('/api/pets/update/:petId', async (req, res) => {
 })
 
 //DELETE Route to delete a pet
-//'/api/pets/:pet_id
 app.delete('/api/pets/delete/:petId', async (req, res) => {
     console.log("Sadly deleting this pet now!");
 
@@ -213,7 +246,6 @@ app.delete('/api/pets/delete/:petId', async (req, res) => {
 })
 
 //PUT Route to create a new association between two members (stretch goal)
-//'/api/family/'
 app.put('/api/family', async (req, res) => {
     //Print message to console for potential troubleshooting
     console.log("Creating family connection!");
