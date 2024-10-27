@@ -29,7 +29,7 @@ app.use(express.json());
 
 //All Planned Routes
 
-//POST Route to create a new user
+//POST Route to create a new user - UPDATE ONCE LOG IN IS COMPLETE
 //'/users'
 
 //POST Route to check log in by checking username (using for testing only) - Also use for family connection!
@@ -103,7 +103,36 @@ app.get('/api/pets/:userId', async (req, res) => {
     }
 })
 
-//POST Route to create new training plan (stretch goal)
+//POST Route to create new training plan
+app.post('/api/plans', async (req, res) => {
+    console.log("Creating your new plan!");
+
+    try {
+        //Create array with column names using request body fields
+        const fields = Object.keys(req.body);
+
+        //Create array with values using request body values
+        const values = Object.values(req.body);
+
+        //Create placeholders based on fields length
+        const placeholders = fields.map((_, index) => `$${index + 1}`).join(", ");
+
+        //Compile query statement with field names and placeholders
+        const queryInsert = `INSERT INTO plans (${fields}) VALUES (${placeholders}) RETURNING plan_id`;
+
+        //Send query to database with values array
+        const newPlan = await db.query(queryInsert, values);
+
+        if (newPlan.rowCount < 1) {
+            throw new Error ("Error creating new plan");
+        } else {
+            const newPlanId = newPlan.rows[0].plan_id;
+            res.status(200).json({newPlanId});
+        }
+    } catch (error) {
+        res.status(500).json({ error: "Unable to create new training plan", details: error });
+    }
+})
 
 
 //GET Route to pull all session data for each training plan
