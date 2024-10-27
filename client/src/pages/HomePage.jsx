@@ -1,11 +1,12 @@
 //Import necessary functionalities
 import React from 'react';
-// import LogIn from './LogIn.jsx';
+import MainLayout from '../layout/MainLayout';
 
 const HomePage = () => {
 
     return (
-        <div>
+        <MainLayout>
+            <div>
             {/* Remove this header when implementing real info */}
             <h1>Home Page</h1>
 
@@ -13,9 +14,10 @@ const HomePage = () => {
             <h1>Header</h1>
             <p>Blurb about the site and dog training</p>
 
-            {/* <LogIn /> */}
+            </div>
 
-        </div>
+        </MainLayout>
+        
     )
 }
 
