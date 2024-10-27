@@ -167,8 +167,42 @@ app.post('/api/sessions',async (req, res) => {
     }
 })
 
-//PUT Route to edit session information (stretch goal)
+//PUT Route to edit session information
 //'/sessions/:session_id'
+app.put('/api/sessions/:sessionId', async (req, res) => {
+    console.log("Updating session details");
+
+    try {
+        //Pull session ID from parameters
+        const sessionId = req.params.sessionId;
+        
+        //Pull all fields from request
+        const fields = Object.keys(req.body);
+        //Replace camel case with PSQL naming
+        const fieldsRenamed = fields.map((field) => field.replace("Id", "_id"));
+        //Create query insert with field names
+        const fieldQueryInsert = fieldsRenamed.map((field, index) => `"${field}" = $${index + 1}`).join(', ');
+
+        //Pull out values from request body
+        const values = Object.values(req.body);
+
+        //Compile query statement with field names and session Id
+        const updateSessionQuery = `UPDATE sessions SET ${fieldQueryInsert} WHERE session_id = ${sessionId} RETURNING *`;
+
+        //Send request to database with values array
+        const updateSession = await db.query(updateSessionQuery, values);
+
+        //Error handling - if no response, send error
+        if (updateSession.rowCount < 1) {
+            throw new Error ("Error updating session");
+        } else {
+            //Otherwise, send Status 200 OK and new session information
+            res.status(200).send(updateSession.rows[0]);
+        }
+    } catch (error) {
+        res.status(500).json({ error: "Unable to record this session's details", details: error});
+    }
+})
 
 //DELETE Route to delete a session
 app.delete('/api/sessions/:sessionId', async (req, res) => {
