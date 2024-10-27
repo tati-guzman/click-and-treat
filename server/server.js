@@ -105,9 +105,31 @@ app.get('/api/pets/:userId', async (req, res) => {
 
 //POST Route to create new training plan (stretch goal)
 
-//GET Route to pull all session data for each training plan
-//'/api/sessions/history/:plan_id'
 
+//GET Route to pull all session data for each training plan
+//'/api/sessions/history/:petId/:planId'
+app.get('/api/sessions/history/:petId/:planId', async (req, res) => {
+    console.log("Getting all history for this pet and training plan");
+    
+    try {
+        //Pull information from parameters to pull appropriate training history
+        const petId = req.params.petId;
+        const planId = req.params.planId;
+
+        //Query for all sessions associated with this pet and plan
+        const allSessionsQuery = `SELECT * FROM sessions WHERE pet_id = ${petId} AND plan_id = ${planId}`;
+        const allSessions = await db.query(allSessionsQuery);
+
+        //Check to make sure at least one session has been returned
+        if (allSessions.rowCount < 1) {
+            res.send({ sessions: false });
+        } else {
+            res.send(allSessions.rows);
+        }
+    } catch (error) {
+        res.status(500).json({ error: "Unable to get all history data", details: error });
+    }
+})
 
 //POST Route to submit information for a new session
 //'/sessions/:userId'
