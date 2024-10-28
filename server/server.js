@@ -105,7 +105,7 @@ app.get('/api/pets/:userId', async (req, res) => {
     }
 })
 
-//POST Route to create new training plan
+//POST Route to create new training plan (stretch goal)
 app.post('/api/plans', async (req, res) => {
     console.log("Creating your new plan!");
 
@@ -129,6 +129,7 @@ app.post('/api/plans', async (req, res) => {
             throw new Error ("Error creating new plan");
         } else {
             const newPlanId = newPlan.rows[0].plan_id;
+            //NEED TO ADD ANOTHER QUERY TO NOW IMMEDIATELY CREATE A SUBSCRIPTION BETWEEN THIS USER, SELECTED PET, AND NEW PLAN ID
             res.status(200).json({newPlanId});
         }
     } catch (error) {
@@ -136,8 +137,54 @@ app.post('/api/plans', async (req, res) => {
     }
 })
 
+//GET Route to pull all training plans that a user is subscribed to
+app.get('/api/plans/:userId/:petId', async (req, res) => {
+    console.log("Pulling all relevant subscriptions");
 
-//GET Route to pull all session data for each training plan
+    try {
+        //Pull the userId and petId from the parameters
+        const userId = req.params.userId;
+        const petId = req.params.petId;
+
+        //Query statement to get all subscriptions for this user/pet pair
+        const getSubscriptionsQuery = 'SELECT * FROM subscriptions WHERE user_id = $1 AND pet_id = $2 ORDER BY last_updated DESC';
+
+        //Send query to database
+        const subscriptionsQuery = await db.query(getSubscriptionsQuery, [userId, petId]);
+
+        if (subscriptionsQuery.rowCount < 1) {
+            //Send subscription status if none are found
+            res.status(200).json({ subscriptions: false });
+        } else {
+            //Loop through the subscriptions to pull and add the plan titles
+            const allSubscriptionInfo = await Promise.all(subscriptionsQuery.rows.map(async (subscription) => {
+                //Pull the plan ID for the subscription
+                const planId = subscription.plan_id;
+
+                //Query the plans table for the title of the plan
+                const titleQueryInsert = 'SELECT title FROM plans WHERE plan_id = $1';
+                const planTitle = await db.query(titleQueryInsert, [planId]);
+
+                if (planTitle.rowCount < 1) {
+                    //Error handling in case no title is found - it's a NOT NULL column so should always have a title
+                    throw new Error ("Error pulling plan titles");
+                } else {
+                    //Pull the title from the result of the query
+                    const title = planTitle.rows[0].title;
+                    //Return an adjusted object to add on the title as a key:value pair
+                    return { ...subscription, title: title };
+                }
+            }))
+
+            //Send the subscription status along with each subscription and its respective information
+            res.status(200).json([ { subscriptions: true }, ...allSubscriptionInfo ]);
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Unable to pull all training plans", details: error });
+    }
+})
+
+//GET Route to pull all session data for each subscription - EDIT WITH SUBSCRIPTION ID
 //'/api/sessions/history/:petId/:planId'
 app.get('/api/sessions/history/:petId/:planId', async (req, res) => {
     console.log("Getting all history for this pet and training plan");
@@ -162,7 +209,7 @@ app.get('/api/sessions/history/:petId/:planId', async (req, res) => {
     }
 })
 
-//POST Route to submit information for a new session
+//POST Route to submit information for a new session - EDIT TO INCLUDE SUBSCRIPTIONS
 //'/sessions/:userId'
 app.post('/api/sessions',async (req, res) => {
     console.log("Creating new session record woohoo");
@@ -198,7 +245,7 @@ app.post('/api/sessions',async (req, res) => {
     }
 })
 
-//PUT Route to edit session information
+//PUT Route to edit session information (stretch goal)
 //'/sessions/:session_id'
 app.put('/api/sessions/:sessionId', async (req, res) => {
     console.log("Updating session details");
