@@ -1,14 +1,15 @@
 //Import necessary functionalities
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
+import { UserStatus } from '../context/UserContext.jsx';
 
 //Import log in component to hang out in the upper right hand corner of the page
 import LogIn from './LogIn.jsx';
 
 const NavBar = () => {
 
-    //Temporary state to hold logged user - update with useContext and OAuth info
-    const [loggedUser, setLoggedUser] = useState(null);
+    //Import user information to toggle log in/log out buttons
+    const { loggedUser, setLoggedUser } = UserStatus();
 
     //Logout function to remove logged user
     const logout = () => {
@@ -20,14 +21,20 @@ const NavBar = () => {
             {/* Replace header with logo in the future */}
             {/* <h1 onClick={() => loggedUser ? setComponent('dashboard') : setComponent('homepage')}>Click and Treat</h1> */}
             {/* Need to create function to link to homepage or dashboard based on loggedUser */}
-            <Link to="/homepage">Click and Treat</Link>
+            
+            {loggedUser
+            ? <Link to="/dashboard">Click and Treat</Link>
+            : <Link to="/homepage">Click and Treat</Link>}
             
             <Link to="/about">About</Link>
             <Link to="/examples">Example Training Plans</Link>
 
             {loggedUser 
-            ? <Link to="/homepage"><button onClick={logout}>Log Out</button></Link>
-            : <LogIn loggedUser={loggedUser} setLoggedUser={setLoggedUser} />}
+            ? <div>
+                <Link to="/account"><button>Account Information</button></Link>
+                <Link to="/homepage"><button onClick={logout}>Log Out</button></Link>
+            </div>
+            : <LogIn />}
         </nav>
     )
 }
