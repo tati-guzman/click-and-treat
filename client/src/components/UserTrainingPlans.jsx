@@ -1,28 +1,74 @@
 //Import necessary functionalities
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { UserStatus } from '../context/UserContext';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const UserTrainingPlans = ({ selectedPet }) => {
     
+    //Use useNavigate hook from React Router to establish functionality in buttons below
+    const navigate = useNavigate();
+    
     //Import user settings to use in data pulls
     const { loggedUser, setLoggedUser } = UserStatus();
-
-    console.log("user trianing", selectedPet)
-   
-    //Will need to pull all training plan information for this particular user via server GET request
+    
     //Hold training plan info in state
-    const [trainingPlans, setTrainingPlans] = useState([]);
+    const [trainingPlans, setTrainingPlans] = useState(null);
+
+    //Function to pull all training plans for selected pet
+    const pullPlans = async () => {
+        //Reset previous training plans from other pets first
+        setTrainingPlans(null);
+        
+        //Pull and store query parameters
+        const userId = loggedUser.userId;
+        const petId = selectedPet.petId; //selectedPet is an object that is {petId: petId, petName: petName}
+
+        //Send query with user and pet parameters
+        const response = await fetch(`api/plans/${userId}/${petId}`);
+
+        //Save response in a variable to access for display
+        const trainingPlansDetails = await response.json();
+
+        if (!trainingPlansDetails[0].subscriptions) {
+            setTrainingPlans(null);
+        } else {
+            //Remove the first element of the array (subscription status)
+            trainingPlansDetails.shift();
+            //Store the rest of the information in the trainingPlans state
+            setTrainingPlans(trainingPlansDetails);
+        }
+    }
+
+    //Use Effect to download pet plans when the selectedPet changes
+    useEffect(() => {
+        pullPlans();
+    }, [selectedPet]);
+
+    //Function to format the display of current training plans
+    const displayPlans = () => {
+        if (!trainingPlans) {
+            return <p>There are no training plans linked to this pet!</p>
+        } else {
+            return trainingPlans.map((plan, index) => (
+                <div key={index}>
+                    <h4>Skill Name: {plan.title}</h4>
+                    <p>Skill Status: {plan.status}</p>
+                    <button onClick={() => navigate('/session', {details: {...plan, petName: selectedPet.petName }})}>Add Session</button>
+                    <button onClick={() => navigate('/history', {details: {...plan, petName: selectedPet.petName }})}>View History</button>
+                </div>
+            )) 
+        }
+    }
     
     return (
         <div>
             <h1>User Training Plans</h1>
 
-            {/* Map through the training plan state to show different skills */}
-            <p>List out all the information for the training plans the user is subscribed to, including buttons to add a session and view history (change views to those)</p>
+            {selectedPet
+            ? displayPlans()
+            : <p>Please select a pet to view their subscribed plans</p>}
 
-            <Link to="/session"><button>Add Session</button></Link>
-            <Link to="/history"><button>View History</button></Link>
+            {/* Add New Plan button (stretch goal): Pulls up component that lists all public plans and has buttons to subscribe to that plan. Also include the "Create Plan" button so users access the form to create their own private plan */}
         </div>
     )
 }
