@@ -3,10 +3,12 @@ import React, { useState } from 'react';
 import { UserStatus } from '../context/UserContext';
 import { Link } from 'react-router-dom';
 
-const UserTrainingPlans = () => {
+const UserTrainingPlans = ({ selectedPet }) => {
     
     //Import user settings to use in data pulls
     const { loggedUser, setLoggedUser } = UserStatus();
+
+    console.log("user trianing", selectedPet)
    
     //Will need to pull all training plan information for this particular user via server GET request
     //Hold training plan info in state

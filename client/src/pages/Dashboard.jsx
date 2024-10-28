@@ -1,5 +1,5 @@
 //Import necessary functionalities
-import React from 'react';
+import React, { useState } from 'react';
 import MainLayout from '../layout/MainLayout';
 import { UserStatus } from '../context/UserContext';
 
@@ -15,6 +15,9 @@ const Dashboard = () => {
    //Import user settings to use in displaying name
    const { loggedUser, setLoggedUser } = UserStatus();
 
+   //State to hold the current pet that is being trained
+   const [selectedPet, setSelectedPet] = useState(null);
+
     return (
         <MainLayout>
             <div>
@@ -22,9 +25,9 @@ const Dashboard = () => {
 
                 <h2>Welcome back, {loggedUser.name}!</h2>
 
-                <PetInfo />
+                <PetInfo setSelectedPet={setSelectedPet}/>
     
-                <UserTrainingPlans />
+                <UserTrainingPlans selectedPet={selectedPet}/>
 
                 <MotivationalQuotes />
             </div>
