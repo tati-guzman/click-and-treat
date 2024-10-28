@@ -128,9 +128,7 @@ CREATE TABLE public.sessions (
     notes character varying,
     proceed boolean,
     draft boolean,
-    pet_id integer,
-    user_id integer,
-    plan_id integer
+    subscription_id integer NOT NULL
 );
 
 
@@ -152,6 +150,40 @@ CREATE SEQUENCE public.sessions_session_id_seq
 --
 
 ALTER SEQUENCE public.sessions_session_id_seq OWNED BY public.sessions.session_id;
+
+
+--
+-- Name: subscriptions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.subscriptions (
+    subscription_id integer NOT NULL,
+    user_id integer NOT NULL,
+    pet_id integer NOT NULL,
+    plan_id integer NOT NULL,
+    status character varying,
+    last_updated date
+);
+
+
+--
+-- Name: subscriptions_subscription_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.subscriptions_subscription_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: subscriptions_subscription_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.subscriptions_subscription_id_seq OWNED BY public.subscriptions.subscription_id;
 
 
 --
@@ -215,75 +247,17 @@ ALTER TABLE ONLY public.sessions ALTER COLUMN session_id SET DEFAULT nextval('pu
 
 
 --
+-- Name: subscriptions subscription_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.subscriptions ALTER COLUMN subscription_id SET DEFAULT nextval('public.subscriptions_subscription_id_seq'::regclass);
+
+
+--
 -- Name: users user_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.users ALTER COLUMN user_id SET DEFAULT nextval('public.users_user_id_seq'::regclass);
-
-
---
--- Data for Name: family; Type: TABLE DATA; Schema: public; Owner: -
---
-
-
-
---
--- Data for Name: pets; Type: TABLE DATA; Schema: public; Owner: -
---
-
-
-
---
--- Data for Name: plans; Type: TABLE DATA; Schema: public; Owner: -
---
-
-
-
---
--- Data for Name: sessions; Type: TABLE DATA; Schema: public; Owner: -
---
-
-
-
---
--- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
---
-
-
-
---
--- Name: family_family_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.family_family_id_seq', 1, false);
-
-
---
--- Name: pets_pet_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.pets_pet_id_seq', 1, false);
-
-
---
--- Name: plans_plan_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.plans_plan_id_seq', 1, false);
-
-
---
--- Name: sessions_session_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.sessions_session_id_seq', 1, false);
-
-
---
--- Name: users_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.users_user_id_seq', 1, false);
 
 
 --
@@ -319,6 +293,14 @@ ALTER TABLE ONLY public.sessions
 
 
 --
+-- Name: subscriptions subscriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.subscriptions
+    ADD CONSTRAINT subscriptions_pkey PRIMARY KEY (subscription_id);
+
+
+--
 -- Name: users users_email_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -351,27 +333,35 @@ ALTER TABLE ONLY public.family
 
 
 --
--- Name: sessions sessions_pet_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: sessions sessions_subscription_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.sessions
-    ADD CONSTRAINT sessions_pet_id_fkey FOREIGN KEY (pet_id) REFERENCES public.pets(pet_id) ON DELETE CASCADE;
+    ADD CONSTRAINT sessions_subscription_id_fkey FOREIGN KEY (subscription_id) REFERENCES public.subscriptions(subscription_id);
 
 
 --
--- Name: sessions sessions_plan_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: subscriptions subscriptions_pet_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.sessions
-    ADD CONSTRAINT sessions_plan_id_fkey FOREIGN KEY (plan_id) REFERENCES public.plans(plan_id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.subscriptions
+    ADD CONSTRAINT subscriptions_pet_id_fkey FOREIGN KEY (pet_id) REFERENCES public.pets(pet_id);
 
 
 --
--- Name: sessions sessions_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: subscriptions subscriptions_plan_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.sessions
-    ADD CONSTRAINT sessions_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.subscriptions
+    ADD CONSTRAINT subscriptions_plan_id_fkey FOREIGN KEY (plan_id) REFERENCES public.plans(plan_id);
+
+
+--
+-- Name: subscriptions subscriptions_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.subscriptions
+    ADD CONSTRAINT subscriptions_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id);
 
 
 --
