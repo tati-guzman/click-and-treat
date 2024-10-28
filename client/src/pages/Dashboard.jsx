@@ -18,7 +18,9 @@ const Dashboard = () => {
     return (
         <MainLayout>
             <div>
-                <h1>Dashboard Component (Greetings, Name!)</h1>
+                <h1>Dashboard Component</h1>
+
+                <h2>Welcome back, {loggedUser}!</h2>
 
                 <PetInfo />
     
