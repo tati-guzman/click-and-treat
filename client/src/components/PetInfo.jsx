@@ -52,8 +52,10 @@ const PetInfo = ({ setSelectedPet }) => {
 
     //Function to set selected pet state for use in UserTrainingPlans component
     const selectPet = (index) => {
+        //Pull out petId and name
         const petId = petInfo[index].pet_id;
-        setSelectedPet({petId: petId});
+        const petName = petInfo[index].name;
+        setSelectedPet({petId: petId, petName: petName});
     }
 
     return (
