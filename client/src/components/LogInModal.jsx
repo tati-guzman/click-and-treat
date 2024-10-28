@@ -1,16 +1,18 @@
 //Import necessary functionalities
-import React, { useContext, useState } from 'react';
-import UserComponentContext from '../UserComponentContext.js';
+import React from 'react';
+import { UserStatus } from '../context/UserContext.jsx';
+import { useNavigate } from 'react-router-dom';
 
 const LogInModal = ({ isOpen, onClose }) => {
 
     if (!isOpen) return null;
 
     //Import display and user settings to use in display control and user updates
-    const { display, user } = useContext(UserComponentContext);
-    const [component, setComponent] = display;
-    const [loggedUser, setLoggedUser] = user;
+    const { loggedUser, setLoggedUser } = UserStatus();
     
+    //Call useNavigate hook to change component display upon log in
+    const navigate = useNavigate();
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         
@@ -41,10 +43,16 @@ const LogInModal = ({ isOpen, onClose }) => {
 
                 //If there is a user with this username, log them in
                 if (userStatus.exists) {
-                    //Change view of component to user dashboard
-                    setComponent('dashboard');
+
+                    //Switch to dashboard display
+                    navigate('/dashboard');
+
                     //Set the logged user state to the user id we will need to get the correct data
-                    setLoggedUser(userStatus.userID);
+                    setLoggedUser(userStatus.userId);
+                    
+                    //Potentially use to combat losing user on refresh:
+                    // localStorage.setItem("user", userStatus.userId);
+
                     //Close the modal
                     onClose();
                 } else {
@@ -70,26 +78,14 @@ const LogInModal = ({ isOpen, onClose }) => {
                     <label htmlFor="username">Pick User</label><br></br>
                     <select name="username">
                         <option key="1" value="user1">Test User 1</option>
-                        <option key="2" value="user2">Test User 2</option>        
+                        <option key="2" value="user2">Test User 2</option>
+                        <option key="3" value="user3">Test User 3</option>
+                        <option key="4" value="user4">Test User 4</option>
+                        <option key="5" value="user5">Test User 5</option>        
                     </select>
 
                     <button type="submit">Log In</button>
                 </form>
-            
-            {/* Original Form with username submission - may use to complete OAuth? */}
-            {/* <form onSubmit={handleSubmit}>
-                <label htmlFor="username">Username</label>
-                <input
-                    id="username"
-                    name="username"
-                    type="text"
-                    required
-                    />
-
-                
-
-                <button type="submit">Submit</button>
-                </form> */}
             </div>
         </div>
     )
