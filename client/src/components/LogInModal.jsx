@@ -48,7 +48,7 @@ const LogInModal = ({ isOpen, onClose }) => {
                     navigate('/dashboard');
 
                     //Set the logged user state to the user id we will need to get the correct data
-                    setLoggedUser(userStatus.userId);
+                    setLoggedUser({userId: userStatus.userId, name: userStatus.name});
                     
                     //Potentially use to combat losing user on refresh:
                     // localStorage.setItem("user", userStatus.userId);

@@ -56,7 +56,7 @@ app.post('/api/users/', async (req, res) => {
 
         const userId = userDetails.rows[0].user_id;
 
-        res.json({ exists: true, userId: userId });
+        res.json({ exists: true, userId: userId, name: username });
 
     } catch (error) {
         res.status(500).json({ error: "Could not log in", details: error });

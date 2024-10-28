@@ -20,7 +20,7 @@ const Dashboard = () => {
             <div>
                 <h1>Dashboard Component</h1>
 
-                <h2>Welcome back, {loggedUser}!</h2>
+                <h2>Welcome back, {loggedUser.name}!</h2>
 
                 <PetInfo />
     
