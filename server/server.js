@@ -79,25 +79,27 @@ app.get('/api/pets/:userId', async (req, res) => {
         //Make sure there are pets associated with this account
         if (petListData.rowCount === 0) {
             res.json([{ pets: false }]);
-        }
-
-        //Convert the returned data into an array of IDs
-        //petListData [{pet_id: 1, pet_id: 2}] -> petListArray [1, 2]
-        const petListArray = petListData.rows.map((row => row.pet_id));
-       
-        //Compile query string with array of pet ids to check
-        const petInfoQuery = `SELECT * FROM pets WHERE pet_id IN (${petListArray})`;
-        
-        //Query database for information
-        const petInfo = await db.query(petInfoQuery);
-
-        //Second layer of finding no pets associated with account
-        if (petInfo.rowCount === 0) {
-            res.json([{ pets: false }]);
         } else {
-            //Send back all the information pulled from the pets table
-            res.json([{ pets: true }, ...petInfo.rows]);
+            //Convert the returned data into an array of IDs
+            //petListData [{pet_id: 1, pet_id: 2}] -> petListArray [1, 2]
+            const petListArray = petListData.rows.map((row => row.pet_id));
+        
+            //Compile query string with array of pet ids to check
+            const petInfoQuery = `SELECT * FROM pets WHERE pet_id IN (${petListArray})`;
+            
+            //Query database for information
+            const petInfo = await db.query(petInfoQuery);
+
+            //Second layer of finding no pets associated with account
+            if (petInfo.rowCount === 0) {
+                res.json([{ pets: false }]);
+            } else {
+                //Send back all the information pulled from the pets table
+                res.json([{ pets: true }, ...petInfo.rows]);
+            }
         }
+
+        
     } catch (error) {
         res.status(500).json({ error: "Unable to pull pet information", details: error });
     }
