@@ -1,7 +1,11 @@
 //Import necessary functionalities
 import React from 'react';
+import { UserStatus } from '../context/UserContext';
 
 const UserInfoForm = () => {
+
+    //Import user information to use in POST/PUT request
+    const { loggedUser, setLoggedUser } = UserStatus();
 
     //Handle submit function to PUT the updated data in the server
         //Keep user on this page after submission and clear the form

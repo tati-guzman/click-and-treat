@@ -1,15 +1,14 @@
 //Import necessary functionalities
-import React, { useContext, useState } from 'react';
-import UserComponentContext from '../UserComponentContext.js';
+import React from 'react';
+import { UserStatus } from '../context/UserContext';
 
 const NewAccountModal = ({ isOpen, onClose }) => {
 
     if (!isOpen) return null;
     
-    //Import display and user settings to use in display control and user updates
-    const { display, user } = useContext(UserComponentContext);
-    const [component, setComponent] = display;
-    const [loggedUser, setLoggedUser] = user;
+    //Import user settings to use in user updates
+    const { loggedUser, setLoggedUser } = UserStatus();
+
 
     //Need to create handleSubmit function to create new user account with submitted form information
 
