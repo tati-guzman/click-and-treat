@@ -2,6 +2,7 @@
 import './App.css';
 import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import UserContextProvider from './context/UserContext.jsx';
 
 //Import all pages for use in display
 import HomePage from './pages/HomePage.jsx';
@@ -13,9 +14,8 @@ import SessionForm from './pages/SessionForm.jsx';
 import HistoryList from './pages/HistoryList.jsx';
 
 const App = () => {
-    //State to hold logged in user status and data
-    // const [loggedUser, setLoggedUser] = useState(null);
 
+    //Create route to use in React Router
     const router = createBrowserRouter([
         {path: "/", element: <HomePage />},
         {path: "/homepage", element: <HomePage />},
@@ -28,9 +28,11 @@ const App = () => {
     ])
 
     return (
-        <div className="app">
-            <RouterProvider router={router} />
-        </div>
+        <UserContextProvider>
+            <div className="app">
+                <RouterProvider router={router} />
+            </div>
+        </UserContextProvider>
     )
 }
 
