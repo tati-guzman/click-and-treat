@@ -50,11 +50,33 @@ const SessionForm = () => {
     //Handle submit function to POST session details to server/database
     const handleSubmit = (event) => {
         event.preventDefault();
-
-        //Submit inputs through POST request
+        
+        //Print out what would be the submission
         console.log("We'd be submitting now");
         console.log(inputs);
-        //
+
+        //Check to make sure the following are inputted: date and stage
+            //If not, display error messages and don't clear any inputs
+
+        //If date and stage are included => continue with submission logic
+
+        //If "proceed" was included in submission, check the skill status saved in state
+            //If the stage being practiced is < the highest skill status, do nothing
+            //If the stage being practiced is = or > the highest skill status, send new stage status as part of POST request (adjust server side code to PUT this information in subscriptions table)
+
+        //Submit inputs through POST request
+        //POST Request should include all the inputs being sent plus the subscription id (and status if applicable)
+        //{...inputs, subscriptionId: subscriptionId, status: status}
+
+        //If there is an error with request, do not clear the page and present a message
+            //Today goal: console.log the message
+            //WEEK 3 STYLING GOAL: Implement client-side error handling message for this
+
+        //If that response status is 200 OK:
+            //Today goal: Display a success alert
+            //WEEK 3 STYLING GOAL: Implement client-side success message
+        //Also clear all the inputs
+
     }
 
 
@@ -67,8 +89,6 @@ const SessionForm = () => {
         setInputs({});
     }
 
-
-
     //Form questions: Date (required), Stage (required - ADD FORM HANDLING TO ENSURE IT IS REQUIRED), Tasks (text), Notes (text), Proceed (bool), draft (bool - omit for now), subscription_id (required in submission)
 
     //To-Do: Update handleSubmit to POST all the information && update server POST request to also update the status in the subscriptions table if the proceed column is true
@@ -76,8 +96,8 @@ const SessionForm = () => {
     return (
         <MainLayout>
             <div>
-                <h1>{state.petName}'s Training Session</h1>
-                <h2>Skill Name: {state.title}</h2>
+                <h1>{state.petName}'s Training Session for "{state.title}"</h1>
+                <h2>Highest Skill Status Reached: {state.status}</h2>
                 <h3>Training Stages & Details</h3>
 
                 <div>
@@ -135,24 +155,28 @@ const SessionForm = () => {
                         placeholder="Was there any confusion? Any successes to highlight?"
                     />
 
-                    <label>Are you and {state.petName} ready for the next stage?</label>
-                    <label htmlFor="yes-proceed"><input 
-                        id="yes-proceed"
-                        name="proceed"
-                        type="radio"
-                        value="true"
-                        checked={inputs.proceed === true}
-                        onChange={() => setInputs(prevInputs => ({ ...prevInputs, "proceed": true }))}
-                    />Yes</label>
-                    <label htmlFor="no-proceed"><input 
-                        id="no-proceed"
-                        name="proceed"
-                        type="radio"
-                        value="false"
-                        checked={inputs.proceed === false}
-                        onChange={() => setInputs(prevInputs => ({ ...prevInputs, "proceed": false }))}
-                    />No</label>
-
+                    {state.status !== "Mastered" 
+                    ?   <div>
+                            <label>Are you and {state.petName} ready for the next stage?</label>
+                            <label htmlFor="yes-proceed"><input 
+                                id="yes-proceed"
+                                name="proceed"
+                                type="radio"
+                                value="true"
+                                checked={inputs.proceed === true}
+                                onChange={() => setInputs(prevInputs => ({ ...prevInputs, "proceed": true }))}
+                            />Yes</label>
+                            <label htmlFor="no-proceed"><input 
+                                id="no-proceed"
+                                name="proceed"
+                                type="radio"
+                                value="false"
+                                checked={inputs.proceed === false}
+                                onChange={() => setInputs(prevInputs => ({ ...prevInputs, "proceed": false }))}
+                            />No</label>
+                        </div>
+                    :   null }
+                    
                     <button type="submit">Save Session</button>
                     <button onClick={clearForm}>Cancel</button>
 
