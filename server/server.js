@@ -161,18 +161,16 @@ app.get('/api/plans/:userId/:petId', async (req, res) => {
                 //Pull the plan ID for the subscription
                 const planId = subscription.plan_id;
 
-                //Query the plans table for the title of the plan
-                const titleQueryInsert = 'SELECT title FROM plans WHERE plan_id = $1';
-                const planTitle = await db.query(titleQueryInsert, [planId]);
+                //Query the plans table for the title and stages of the plan
+                const planDetailsQueryInsert = 'SELECT title, stages FROM plans WHERE plan_id = $1';
+                const planDetails = await db.query(planDetailsQueryInsert, [planId]);
 
-                if (planTitle.rowCount < 1) {
+                if (planDetails.rowCount < 1) {
                     //Error handling in case no title is found - it's a NOT NULL column so should always have a title
                     throw new Error ("Error pulling plan titles");
                 } else {
-                    //Pull the title from the result of the query
-                    const title = planTitle.rows[0].title;
-                    //Return an adjusted object to add on the title as a key:value pair
-                    return { ...subscription, title: title };
+                    //Return an adjusted object to add on the title and stages of the plan
+                    return { ...subscription, ...planDetails.rows[0] };
                 }
             }))
 
