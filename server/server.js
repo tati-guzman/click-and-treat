@@ -154,7 +154,7 @@ app.get('/api/plans/:userId/:petId', async (req, res) => {
 
         if (subscriptionsQuery.rowCount < 1) {
             //Send subscription status if none are found
-            res.status(200).json({ subscriptions: false });
+            res.status(200).json([{ subscriptions: false }]);
         } else {
             //Loop through the subscriptions to pull and add the plan titles
             const allSubscriptionInfo = await Promise.all(subscriptionsQuery.rows.map(async (subscription) => {

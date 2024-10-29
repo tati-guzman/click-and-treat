@@ -41,6 +41,11 @@ const UserTrainingPlans = ({ selectedPet }) => {
 
     //Use Effect to download pet plans when the selectedPet changes
     useEffect(() => {
+        //Since it will run when first loaded and selectedPet will be null, specify to exit function when null
+        if (!selectedPet) {
+            return;
+        }
+
         pullPlans();
     }, [selectedPet]);
 
