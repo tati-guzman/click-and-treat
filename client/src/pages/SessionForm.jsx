@@ -12,12 +12,15 @@ const SessionForm = () => {
     //state holds the following info from UserTrainingPlans: subscription_id, user_id, pet_id, plan_id, status, last_updated, title, petName, stages
     const { state } = useLocation();
 
+    //Variable to hold the number of stages available - will use to configure form radio buttons
+    const stageKeys = Object.keys(state.stages);
+
     //Function to format display of trick stages from JSONB pulled from database
     const displayStages = () => {
         //Pull stage information from data sent from UserTrainingPlans
         const stages = state.stages;
 
-        //Create array with 
+        //Create array from the object retrieved from the database
         const stageDetails = Object.entries(stages);
         //[["stage 1", "details"], ["stage 2", "details"]]
 
@@ -29,13 +32,47 @@ const SessionForm = () => {
         ))
     }
 
+    //State to hold all form inputs - will end up being an object with each question/answer as a key:value pair
+    const [inputs, setInputs] = useState({});
+
+    //Handle change function to update input values
+    const handleChange = (event) => {
+        //Pull name associated with question -> will translate to column name in database
+        const name = event.target.name;
+
+        //Pull value inputted to answer field to save for form submission
+        const value = event.target.value;
+
+        //Update inputs state to hold all inputted answers
+        setInputs(prevInputs => ({ ...prevInputs, [name]: value }));
+    }
+
     //Handle submit function to POST session details to server/database
+    const handleSubmit = (event) => {
+        event.preventDefault();
+
+        //Submit inputs through POST request
+        console.log("We'd be submitting now");
+        console.log(inputs);
+        //
+    }
+
 
     //STRETCH GOAL: Save Draft function to POST session details (with draft status) to sessions table 
     //STRETCH GOAL: Edit handle submit function to PUT session details while editing prior sessions
 
     //Clear function to clear all input values
+    const clearForm = () => {
+        //Clear input state, which should also clear input fields
+        setInputs({});
+    }
 
+
+
+    //Form questions: Date (required), Stage (required - ADD FORM HANDLING TO ENSURE IT IS REQUIRED), Tasks (text), Notes (text), Proceed (bool), draft (bool - omit for now), subscription_id (required in submission)
+
+    //To-Do: Update handleSubmit to POST all the information && update server POST request to also update the status in the subscriptions table if the proceed column is true
+    
     return (
         <MainLayout>
             <div>
@@ -47,9 +84,82 @@ const SessionForm = () => {
                     {displayStages()}
                 </div>
                 
-                <p>Insert form here to gather all session details: date, notes, question about moving on to next stage</p>
+                <h3>Today's Session Details</h3>
 
-                {/* Buttons to submit session, save as draft, or cancel input */}
+                <form onSubmit={handleSubmit}>
+                    
+                    <label htmlFor="date">Date of Training Session</label>
+                    <input 
+                        id="date"
+                        name="date"
+                        type="date"
+                        required
+                        value={inputs.date || ""}
+                        onChange={handleChange}
+                    />
+
+                    <label>Stage</label>
+                    {
+                        stageKeys.map((stage, index) => (
+                            <div key={index}>
+                                <label key={index}>
+                                    <input
+                                    id={stage}
+                                    name="stage"
+                                    type="radio"
+                                    value={index + 1}
+                                    checked={(inputs.stage === (index + 1).toString())}
+                                    onChange={handleChange}
+                                    />
+                                    {index + 1}
+                                    </label>
+                            </div>
+                        ))
+                    }
+
+                    <label htmlFor="tasks">Which tasks did you complete today?</label>
+                    <textarea 
+                        id="tasks"
+                        name="tasks"
+                        value={inputs.tasks || ""}
+                        onChange={handleChange}
+                        placeholder="e.g. Practiced lure back and forth between legs 10 times"
+                    />
+
+                    <label htmlFor="notes">Notes: </label>
+                    <textarea 
+                        id="notes"
+                        name="notes"
+                        value={inputs.notes || ""}
+                        onChange={handleChange}
+                        placeholder="Was there any confusion? Any successes to highlight?"
+                    />
+
+                    <label>Are you and {state.petName} ready for the next stage?</label>
+                    <label htmlFor="yes-proceed"><input 
+                        id="yes-proceed"
+                        name="proceed"
+                        type="radio"
+                        value="true"
+                        checked={inputs.proceed === true}
+                        onChange={() => setInputs(prevInputs => ({ ...prevInputs, "proceed": true }))}
+                    />Yes</label>
+                    <label htmlFor="no-proceed"><input 
+                        id="no-proceed"
+                        name="proceed"
+                        type="radio"
+                        value="false"
+                        checked={inputs.proceed === false}
+                        onChange={() => setInputs(prevInputs => ({ ...prevInputs, "proceed": false }))}
+                    />No</label>
+
+                    <button type="submit">Save Session</button>
+                    <button onClick={clearForm}>Cancel</button>
+
+                    {/* Stretch goal: Implement draft functionality and add "Save Draft" button */}
+
+                </form>
+
                 <button onClick={() => navigate('/history/')}>View History</button>
             </div>
         </MainLayout>
