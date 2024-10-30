@@ -72,9 +72,17 @@ Navigate to [http://localhost:5173](http://localhost:5173) to interact with the 
 
 ### Demo
 
+***ADD SCREENSHOT HERE***
+
 ### Initial Planning
 
+**Database Schema**
+
+***ADD SCREENSHOT HERE***
+
 **Wireframe Screenshots**
+
+***ADD SCREENSHOT HERE***
 
 **JIRA Board - Time Management Plan**
 
@@ -98,7 +106,6 @@ Navigate to [http://localhost:5173](http://localhost:5173) to interact with the 
 
 [HTML](https://html.com/) - Used to design web layout
 
-
 ![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
 
 [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
@@ -114,6 +121,14 @@ Navigate to [http://localhost:5173](http://localhost:5173) to interact with the 
 
 ## Future Features
 
-- [ ] 
+- [ ] Training History Page: A component to list out all saved sessions for a pet, including sessions completed with connected users
+- [ ] Session Details: The ability to view all saved session details for prior sessions
+- [ ] [ZenQuotes API](https://docs.zenquotes.io/zenquotes-documentation/) Implementation: Users will be able to view motivational quotes provided by the ZenQuotes API
+- [ ] About Page & Example Training Plans: Users will have access to information about Techtonica, dog training, the inspiration behind the site, and available plans
+- [ ] Log In Component: The current iteration of this project does not have an established account creation or log-in component. That is pending!
+- [ ] User Connection: Users will be able to connect a specific pet to another user's accounts. This will allow them to view any training session completed by the other user for that particular pet. The goal of this feature is to facilitate organization and cooperation amongst household members who are all participating in the training of that pet.
 
 ## Acknowledgements
+
+* Techtonica & the H2 2024 Cohort
+* My pets, Daisy, Luke, and Han, for being my constant inspirations and sources of joy (and stress)
