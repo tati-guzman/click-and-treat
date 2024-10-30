@@ -72,21 +72,29 @@ Navigate to [http://localhost:5173](http://localhost:5173) to interact with the 
 
 ### Demo
 
-***ADD SCREENSHOT HERE***
+**User Dashboard**
+
+![Screenshot 2024-10-29 at 1 31 24 PM](https://github.com/user-attachments/assets/5ede3677-a0c1-4909-89a7-2e349d753536)
+
+**Session Form**
+
+![Screenshot 2024-10-29 at 1 38 25 PM](https://github.com/user-attachments/assets/b923bc0f-4d38-4147-9e59-aa085f8fa2d9)
 
 ### Initial Planning
 
 **Database Schema**
 
-***ADD SCREENSHOT HERE***
+![Screenshot 2024-10-30 at 2 06 03 PM](https://github.com/user-attachments/assets/c7f25337-c052-4e80-9e43-70c0633be22d)
 
 **Wireframe Screenshots**
 
-***ADD SCREENSHOT HERE***
+![Screenshot 2024-10-30 at 2 05 10 PM](https://github.com/user-attachments/assets/1b06a502-fd40-44b0-9404-84abaa8557f4)
 
 **JIRA Board - Time Management Plan**
 
 [JIRA Board - Time Management Plan](https://tatig.atlassian.net/jira/software/projects/SCRUM/boards/1)
+
+![Screenshot 2024-10-30 at 2 07 13 PM](https://github.com/user-attachments/assets/e54a881d-927d-48b1-a4c1-8b7a70786dff)
 
 **Final Project Pitch Submission**
 
