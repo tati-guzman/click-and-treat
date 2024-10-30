@@ -43,12 +43,12 @@ const LogInModal = ({ isOpen, onClose }) => {
 
                 //If there is a user with this username, log them in
                 if (userStatus.exists) {
+                    
+                    //Set the logged user state to the user id we will need to get the correct data
+                    setLoggedUser({userId: userStatus.userId, name: userStatus.name});
 
                     //Switch to dashboard display
                     navigate('/dashboard');
-
-                    //Set the logged user state to the user id we will need to get the correct data
-                    setLoggedUser({userId: userStatus.userId, name: userStatus.name});
                     
                     //Potentially use to combat losing user on refresh:
                     // localStorage.setItem("user", userStatus.userId);
