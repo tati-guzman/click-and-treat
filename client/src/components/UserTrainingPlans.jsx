@@ -11,7 +11,7 @@ const UserTrainingPlans = ({ selectedPet }) => {
     //Import user settings to use in data pulls
     const { loggedUser, setLoggedUser } = UserStatus();
     
-    //Hold training plan info in state
+    //Hold training plan info in state - initialize as null so "Please select pet" is displayed properly until there are values being held in this state
     const [trainingPlans, setTrainingPlans] = useState(null);
 
     //Function to pull all training plans for selected pet
