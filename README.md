@@ -4,6 +4,72 @@ Click and Treat is a free training tracker to help pet owners structure and docu
 
 ## Installation
 
+Follow these steps to run the Click and Treat project locally:
+
+Open your terminal
+
+Change directory to where you want to store the project
+
+```
+~/ cd new/Directory/on/your/machine
+```
+
+Clone this repository using the HTTPS URL
+
+```
+git clone https://github.com/tati-guzman/click-and-treat.git
+```
+
+Navigate into the client directory
+
+```
+cd ./client
+```
+
+Install all relevant dependencies
+
+```
+npm install
+```
+
+Navigate into the server directory
+
+```
+cd ../server/
+```
+
+Install all relevant dependencies
+
+```
+npm install
+```
+
+Restore DB Dump file
+
+```
+psql -f db.sql
+```
+
+Create a .env file
+
+```
+touch .env
+```
+
+Add in relevant configuration
+
+```
+DB_URI="postgresql://localhost/<nameofdatabase>"
+```
+
+Start the app concurrently from server directory
+
+```
+npm run dev
+```
+
+Navigate to [http://localhost:5173](http://localhost:5173) to interact with the front end of the app.
+
 ### Demo
 
 ### Initial Planning
