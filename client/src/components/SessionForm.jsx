@@ -1,39 +1,13 @@
 //Import necessary functionalities
 import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import MainLayout from '../layout/MainLayout';
 
-const SessionForm = () => {
-
-    //Use useNavigate hook from React Router to establish functionality in buttons below
-    const navigate = useNavigate();
-    
-    //Call useLocation hook to import all the data sent from UserTrainingPlans component
-    //state holds the following info from UserTrainingPlans: subscription_id, user_id, pet_id, plan_id, status, last_updated, title, petName, stages
-    const { state } = useLocation();
-
-    //Variable to hold the number of stages available - will use to configure form radio buttons
-    const stageKeys = Object.keys(state.stages);
-
-    //Function to format display of trick stages from JSONB pulled from database
-    const displayStages = () => {
-        //Pull stage information from data sent from UserTrainingPlans
-        const stages = state.stages;
-
-        //Create array from the object retrieved from the database
-        const stageDetails = Object.entries(stages);
-        //[["stage 1", "details"], ["stage 2", "details"]]
-
-        return stageDetails.map((stage, index) => (
-            <div key={index}>
-                <h3>{stage[0]}:</h3>
-                <p>{stage[1]}</p>
-            </div>
-        ))
-    }
+const SessionForm = ({ state }) => {
 
     //State to hold all form inputs - will end up being an object with each question/answer as a key:value pair
     const [inputs, setInputs] = useState({});
+
+    //Variable to hold the number of stages available - will use to configure form radio buttons
+    const stageKeys = Object.keys(state.stages);
 
     //Handle change function to update input values
     const handleChange = (event) => {
@@ -94,16 +68,7 @@ const SessionForm = () => {
     //To-Do: Update handleSubmit to POST all the information && update server POST request to also update the status in the subscriptions table if the proceed column is true
     
     return (
-        <MainLayout>
             <div>
-                <h1>{state.petName}'s Training Session for "{state.title}"</h1>
-                <h2>Highest Skill Status Reached: {state.status}</h2>
-                <h3>Training Stages & Details</h3>
-
-                <div>
-                    {displayStages()}
-                </div>
-                
                 <h3>Today's Session Details</h3>
 
                 <form onSubmit={handleSubmit}>
@@ -183,10 +148,7 @@ const SessionForm = () => {
                     {/* Stretch goal: Implement draft functionality and add "Save Draft" button */}
 
                 </form>
-
-                <button onClick={() => navigate('/history/')}>View History</button>
             </div>
-        </MainLayout>
     )
 }
 

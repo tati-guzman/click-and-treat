@@ -10,7 +10,7 @@ import About from './pages/About.jsx';
 import Examples from './pages/Examples.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import AccountInformation from './pages/AccountInformation.jsx';
-import SessionForm from './pages/SessionForm.jsx';
+import AddSession from './pages/AddSession.jsx';
 import HistoryList from './pages/HistoryList.jsx';
 
 const App = () => {
@@ -23,7 +23,7 @@ const App = () => {
         {path: "/examples", element: <Examples />},
         {path: "/dashboard", element: <Dashboard />},
         {path: "/account", element: <AccountInformation />},
-        {path: "/session", element: <SessionForm />},
+        {path: "/session", element: <AddSession />},
         {path: "/history", element: <HistoryList />}
     ])
 
