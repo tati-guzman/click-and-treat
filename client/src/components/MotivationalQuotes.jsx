@@ -10,9 +10,9 @@ const MotivationalQuotes = () => {
 
     return (
         <div>
-            <h1>Motivational Quotes Component - just the button</h1>
+            <h1>Motivational Quotes Component - Pending Week 3 Implementation</h1>
             
-            <button onClick={pullQuote}>Feeling Stressed? Click here for motivation!</button>
+            <button onClick={pullQuote}>Feeling Stressed? Click Here for Motivation!</button>
 
             {/* Add modal to display the different options and quotes pulled from API! */}
         </div>

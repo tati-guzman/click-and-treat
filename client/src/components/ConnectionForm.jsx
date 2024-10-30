@@ -1,8 +1,10 @@
 //Import necessary functionalities
 import React from 'react';
+import { UserStatus } from '../context/UserContext';
 
 const ConnectionForm = () => {
 
+    const { loggedUser, setLoggedUser } = UserStatus();
     //Handle submit function to POST the information the family table via server
         //Don't take user off this page when they submit. Just clear the form!
         //Need to also validate that the other user even exists before placing connection

@@ -1,52 +1,38 @@
 //Import styling sheets and functionalities
 import './App.css';
-import React, { useState, useContext } from 'react';
+import React from 'react';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import UserContextProvider from './context/UserContext.jsx';
 
-
-//Import all components for use in display
-import ComponentContext from './ComponentContext.js';
-import NavBar from './components/NavBar.jsx';
-import HomePage from './components/HomePage.jsx';
-import About from './components/About.jsx';
-import Examples from './components/Examples.jsx';
-import Dashboard from './components/Dashboard.jsx';
-import AccountInformation from './components/AccountInformation.jsx';
-import SessionForm from './components/SessionForm.jsx';
-import HistoryList from './components/HistoryList.jsx';
+//Import all pages for use in display
+import HomePage from './pages/HomePage.jsx';
+import About from './pages/About.jsx';
+import Examples from './pages/Examples.jsx';
+import Dashboard from './pages/Dashboard.jsx';
+import AccountInformation from './pages/AccountInformation.jsx';
+import AddSession from './pages/AddSession.jsx';
+import HistoryList from './pages/HistoryList.jsx';
 
 const App = () => {
-    //State to hold displayed component
-    const [component, setComponent] = useState('homepage');
 
-    //Function to switch between components - change to React Router!
-    const chooseComponent = (component) => {
-        switch (component) {
-            case 'homepage':
-                return <HomePage />;
-            case 'about':
-                return <About />;
-            case 'examples':
-                return <Examples />;
-            case 'dashboard':
-                return <Dashboard />;
-            case 'account info':
-                return <AccountInformation />;
-            case 'session form':
-                return <SessionForm />;
-            case 'history':
-                return <HistoryList />;
-            // Need to add default state based on the user log in status!
-        }
-    }
+    //Create route to use in React Router
+    const router = createBrowserRouter([
+        {path: "/", element: <HomePage />},
+        {path: "/homepage", element: <HomePage />},
+        {path: "/about", element: <About />},
+        {path: "/examples", element: <Examples />},
+        {path: "/dashboard", element: <Dashboard />},
+        {path: "/account", element: <AccountInformation />},
+        {path: "/session", element: <AddSession />},
+        {path: "/history", element: <HistoryList />}
+    ])
 
     return (
-        <div className="app">
-            <ComponentContext.Provider value={{ setComponent }}>
-              <NavBar />
-
-              {chooseComponent(component)}
-            </ComponentContext.Provider>
-        </div>
+        <UserContextProvider>
+            <div className="app">
+                <RouterProvider router={router} />
+            </div>
+        </UserContextProvider>
     )
 }
 
