@@ -19,8 +19,6 @@ const NavBar = () => {
     return (
         <nav>
             {/* Replace header with logo in the future */}
-            {/* <h1 onClick={() => loggedUser ? setComponent('dashboard') : setComponent('homepage')}>Click and Treat</h1> */}
-            {/* Need to create function to link to homepage or dashboard based on loggedUser */}
             
             {loggedUser
             ? <Link to="/dashboard">Click and Treat</Link>
