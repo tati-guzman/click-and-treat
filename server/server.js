@@ -192,7 +192,7 @@ app.get('/api/sessions/history/:subscriptionId', async (req, res) => {
         const subscriptionId = req.params.subscriptionId;
 
         //Query for all sessions associated with this pet and plan
-        const allSessionsQuery = `SELECT * FROM sessions WHERE subscription_id = ${subscriptionId}`;
+        const allSessionsQuery = `SELECT * FROM sessions WHERE subscription_id = ${subscriptionId} ORDER BY date ASC`;
         const allSessions = await db.query(allSessionsQuery);
 
         //Query for latest status from subscription table
