@@ -129,10 +129,10 @@ Navigate to [http://localhost:5173](http://localhost:5173) to interact with the 
 
 ## Future Features
 
-- [ ] Training History Page: A component to list out all saved sessions for a pet, including sessions completed with connected users
-- [ ] Session Details: The ability to view all saved session details for prior sessions
-- [ ] [ZenQuotes API](https://docs.zenquotes.io/zenquotes-documentation/) Implementation: Users will be able to view motivational quotes provided by the ZenQuotes API
-- [ ] About Page & Example Training Plans: Users will have access to information about Techtonica, dog training, the inspiration behind the site, and available plans
+- [X] Training History Page: A component to list out all saved sessions for a pet, including sessions completed with connected users
+- [X] Session Details: The ability to view all saved session details for prior sessions
+- [X] [ZenQuotes API](https://docs.zenquotes.io/zenquotes-documentation/) Implementation: Users will be able to view motivational quotes provided by the ZenQuotes API
+- [X] About Page & Example Training Plans: Users will have access to information about Techtonica, dog training, the inspiration behind the site, and available plans
 - [ ] Log In Component: The current iteration of this project does not have an established account creation or log-in component. That is pending!
 - [ ] User Connection: Users will be able to connect a specific pet to another user's accounts. This will allow them to view any training session completed by the other user for that particular pet. The goal of this feature is to facilitate organization and cooperation amongst household members who are all participating in the training of that pet.
 
