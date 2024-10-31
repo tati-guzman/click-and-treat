@@ -1,18 +1,21 @@
 //Import necessary functionalities
-import React, { useContext } from 'react';
-import ComponentContext from '../ComponentContext.js';
-const { setComponent } = useContext(ComponentContext);
+import React from 'react';
 
-const SessionDetails = () => {
+const SessionDetails = ({ isOpen, onClose, selectedSession }) => {
 
-    //Convert this into a modal that pulls the information from the sessions table for the particular session
+    if (!isOpen) return null;
 
-    //Display all information from the table and include buttons to go back to the history page or edit the details (if they are for a session run by that particular user)
+    console.log(selectedSession);
+    
+    //Future Goal: Add "Edit Session" button and functionality
 
     return (
-        <div>
-            <h1>Session Details Modal!</h1>
-            <button onClick={() => setComponent('history')}>Back to History</button>
+        <div className="modal-overlay" onClick={onClose}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                <h1>Session Details</h1>
+
+                <button onClick={onClose}>Close Details</button>
+            </div>
         </div>
     )
 }

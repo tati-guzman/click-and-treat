@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import MainLayout from '../layout/MainLayout';
 import { useLocation, useNavigate } from 'react-router-dom';
+import SessionDetails from '../components/SessionDetails';
 
 const HistoryList = () => {
 
@@ -57,14 +58,6 @@ const HistoryList = () => {
 
     //Function to map through the session information and format display of the sessions
     const displaySessions = () => {
-        //Function to format the date display
-        const formatDate = (date) => {
-            return new Date(date).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            })
-        };
 
         //Future Tasks: When family connection is implemented, also include user in this display!
         return sessionsPulled.map((session, index) => (
@@ -72,9 +65,36 @@ const HistoryList = () => {
                     <h4>Session Date: {formatDate(session.date)}</h4>
                     <p key={index}>Main Focus: Stage {session.stage}</p>
                     <p key={"notes" + index}>Notes: {session.notes ? session.notes : "N/A"}</p>
-                    {/* <button onClick={openModal(session)}>View Details</button> */} 
+                    <button onClick={() => openDetails(session)}>View Details</button>
                 </div>
         ))
+    }
+
+    //Function to format the date display
+    const formatDate = (date) => {
+        return new Date(date).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        })
+    };
+
+    //State to hold selected session for details modal
+    const [selectedSession, setSelectedSession] = useState(null);
+
+    //State to toggle modal visibility
+    const [detailsModal, setDetailsModal] = useState(false);
+
+    //Function to set up details modal correctly when the View Details button is clicked
+    const openDetails = (session) => {
+        setSelectedSession(session);
+        setDetailsModal(true);
+    }
+
+    //Function to reset modal upon close
+    const closeModal = () => {
+        setSelectedSession(null);
+        setDetailsModal(false);
     }
     
     return (
@@ -89,6 +109,8 @@ const HistoryList = () => {
                 {sessionsPulled
                 ? displaySessions()
                 : <p>{petName} does not have any sessions recorded for "{title}". Return to Dashboard to select a new skill/pet to view or add a new training session!</p>}
+
+                {detailsModal && <SessionDetails selectedSession={selectedSession} isOpen={detailsModal} onClose={closeModal} />}
 
                 <button onClick={() => navigate('/dashboard')}>Return to Dashboard</button>
                 <button onClick={() => navigate('/session', { state: { ...state }})}>Add New Session</button>
