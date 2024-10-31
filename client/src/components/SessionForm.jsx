@@ -63,13 +63,18 @@ const SessionForm = ({ state }) => {
             if (inputs.proceed) {
                 //If they had not previously started or practiced at their highest stage (or higher) set skill status to one level above 
                 if (state.status === "Not Started" || skillLevel <= inputs.stage) {
-                    const newLevel = inputs.stage + 1;
+                    const newLevel = parseInt(inputs.stage) + 1;
+                    console.log("new level", newLevel);
                     //If that level above is now one level above the limit, set the status to "Mastered"
                     if (newLevel > stageKeys.length) {
                         return "Mastered";
                     } else {
                         return "Stage " + newLevel;
                     }
+                }
+            } else if (!inputs.proceed) {
+                if (state.status === "Not Started") {
+                    return "Stage " + inputs.stage;
                 }
             }
         }
