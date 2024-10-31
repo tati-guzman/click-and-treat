@@ -458,7 +458,7 @@ app.put('/api/family', async (req, res) => {
 
 //********** Third Party API Calls (3) **********
 //GET request to fetch the motivational quote of the day
-app.get('/quotes/daily', async (req, res) => {
+app.get('/api/quotes/daily', async (req, res) => {
     const url = 'https://zenquotes.io/api/today/';
 
     console.log("Fetching quote of the day!");
@@ -467,7 +467,7 @@ app.get('/quotes/daily', async (req, res) => {
         //Response is parsed into json format
         .then((res) => res.json())
         //JSON is sent to the front end
-        .then((quote) => res.send(quote))
+        .then((quote) => res.send({quote: quote[0].q, author: quote[0].a}))
         //If there is an error, the details will be logged to the console FOR NOW
             //This needs to be updated to have better error handling
         .catch((err) => {
@@ -476,7 +476,7 @@ app.get('/quotes/daily', async (req, res) => {
 })
 
 //GET request to fetch a list of motivational quotes
-app.get('/quotes/list', async (req, res) => {
+app.get('/api/quotes/list', async (req, res) => {
     const url = 'https://zenquotes.io/api/quotes/';
     
     console.log("Fetching list of quotes!");
@@ -495,7 +495,7 @@ app.get('/quotes/list', async (req, res) => {
 })
 
 //GET request to fetch a single random quote
-app.get('/quotes/random', async (req, res) => {
+app.get('/api/quotes/random', async (req, res) => {
     const url = 'https://zenquotes.io/api/random/';
 
     console.log("Fetching single random quote!");
@@ -504,7 +504,7 @@ app.get('/quotes/random', async (req, res) => {
         //Response is parsed into json format
         .then((res) => res.json())
         //JSON is sent to the front end
-        .then((quote) => res.send(quote))
+        .then((quote) => res.send({quote: quote[0].q, author: quote[0].a}))
         //If there is an error, the details will be logged to the console FOR NOW
             //This needs to be updated to have better error handling
         .catch((err) => {
