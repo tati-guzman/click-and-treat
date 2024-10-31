@@ -21,6 +21,12 @@ const SessionForm = ({ state }) => {
         setInputs(prevInputs => ({ ...prevInputs, [name]: value }));
     }
 
+    //States to toggle visibility of various error handling messages or form submission success message
+    const [dateErrorMessage, setDateErrorMessage] = useState(false);
+    const [stageErrorMessage, setStageErrorMessage] = useState(false);
+    const [formErrorMessage, setFormErrorMessage] = useState(false);
+    const [successMessage, setSuccessMessage] = useState(false);
+
     //Handle submit function to POST session details to server/database
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -82,8 +88,9 @@ const SessionForm = ({ state }) => {
                         value={inputs.date || ""}
                         onChange={handleChange}
                     />
+                    {dateErrorMessage && <p>Please enter the date this session took place.</p>}
 
-                    <label>Stage</label>
+                    <label>Which stage did you focus on today? Please select the stage you spent the most time reinforcing.</label>
                     {
                         stageKeys.map((stage, index) => (
                             <div key={index}>
@@ -101,6 +108,7 @@ const SessionForm = ({ state }) => {
                             </div>
                         ))
                     }
+                    {stageErrorMessage && <p>Please select which stage was practiced during this session. A selection is required.</p>}
 
                     <label htmlFor="tasks">Which tasks did you complete today?</label>
                     <textarea 
@@ -142,6 +150,9 @@ const SessionForm = ({ state }) => {
                         </div>
                     :   null }
                     
+                    {formErrorMessage && <p>Oops! We're having trouble submitting your form. Please try again.</p>}
+                    {successMessage && <p>Woohoo! Your session was submitted successfully. To view your session details, go to "View History".</p>}
+
                     <button type="submit">Save Session</button>
                     <button onClick={clearForm}>Cancel</button>
 
