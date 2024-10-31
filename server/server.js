@@ -207,27 +207,34 @@ app.get('/api/sessions/history/:petId/:planId', async (req, res) => {
     }
 })
 
-//POST Route to submit information for a new session - EDIT TO INCLUDE SUBSCRIPTIONS
+//POST Route to submit information for a new session
 //'/sessions/:userId'
 app.post('/api/sessions',async (req, res) => {
     console.log("Creating new session record woohoo");
 
     try {
+        //Hold the request information in a new variable
+        const request = req.body;
+        console.log("request body", request);
+        
+        //Pull out the status into its own variable and delete it from the request object
+        const newStatus = request.status;
+        delete request.status;
+
         //Pull all fields from request
-        const fields = Object.keys(req.body);
+        const fields = Object.keys(request);
 
         //Map into a string with field names and replace camel case with PSQL naming
         const fieldQueryInsert = fields.map((field) => `${field.replace("Id", "_id")}`).join(", ");
 
-        //Pull out values from request body
-        const values = Object.values(req.body);
+        //Pull out values from request
+        const values = Object.values(request);
 
         //Create placeholders for each value
         const placeholders = values.map((_,index) => `$${index + 1}`).join(", ");
 
         //Compile query statement with field names and value placeholders
         const newSessionQuery = `INSERT INTO sessions (${fieldQueryInsert}) VALUES (${placeholders})`;
-
         //Send request to database with values array
         const newSessionInfo = await db.query(newSessionQuery, values);
 
@@ -235,8 +242,24 @@ app.post('/api/sessions',async (req, res) => {
         if (newSessionInfo.rowCount < 1) {
             throw new Error ("Error creating session");
         } else {
-            //Otherwise, send Status 200 OK
-            res.status(200).send();
+            //If that query is successful, check to see if the status needs to be updated
+            if (newStatus) {
+                //Create query statement to update the status and last updated columns for this subscription
+                const subscriptionUpdateInsert = 'UPDATE subscriptions SET status = $1, last_updated = $2 WHERE subscription_id = $3 RETURNING *';
+                
+                //Send query with relevant variables
+                const subscriptionUpdateQuery = await db.query(subscriptionUpdateInsert, [newStatus, request.date, request.subscriptionId]);
+
+                //If there is an error, send back error to trigger client-side error handling message
+                if (subscriptionUpdateQuery.rowCount < 1) {
+                    throw new Error ("Error updating subscription table");
+                } else {
+                    //If successful, send Status 200 OK
+                    res.status(200).send();
+                }
+            } else {
+                res.status(200).send();
+            }  
         }
     } catch (error) {
         res.status(500).json({ error: "Unable to record this session's details", details: error});

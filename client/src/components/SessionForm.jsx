@@ -75,7 +75,7 @@ const SessionForm = ({ state }) => {
         }
 
         //Compile request body
-        const submissionData = {...inputs, subscriptionId: state.subscriptionId, status: newStatus};
+        const submissionData = {...inputs, subscriptionId: state.subscription_id, status: newStatus()};
 
         //Submit data through POST request
         try {
@@ -190,7 +190,7 @@ const SessionForm = ({ state }) => {
                     :   null }
                     
                     {formErrorMessage && <p>Oops! We're having trouble submitting your form. Please try again.</p>}
-                    {successMessage && <p>Woohoo! Your session was submitted successfully. To view your session details, go to "View History".</p>}
+                    {successMessage && <p>Woohoo! Your session was submitted successfully. To view your session details and updates to your pets progress, go to "View History".</p>}
 
                     <button type="submit">Save Session</button>
                     <button onClick={clearForm}>Cancel</button>
