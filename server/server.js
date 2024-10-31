@@ -182,25 +182,30 @@ app.get('/api/plans/:userId/:petId', async (req, res) => {
     }
 })
 
-//GET Route to pull all session data for each subscription - EDIT WITH SUBSCRIPTION ID
-//'/api/sessions/history/:petId/:planId'
-app.get('/api/sessions/history/:petId/:planId', async (req, res) => {
+//GET Route to pull all session data for each subscription
+//'/api/sessions/history/:subscriptionId'
+app.get('/api/sessions/history/:subscriptionId', async (req, res) => {
     console.log("Getting all history for this pet and training plan");
     
     try {
         //Pull information from parameters to pull appropriate training history
-        const petId = req.params.petId;
-        const planId = req.params.planId;
+        const subscriptionId = req.params.subscriptionId;
 
         //Query for all sessions associated with this pet and plan
-        const allSessionsQuery = `SELECT * FROM sessions WHERE pet_id = ${petId} AND plan_id = ${planId}`;
+        const allSessionsQuery = `SELECT * FROM sessions WHERE subscription_id = ${subscriptionId}`;
         const allSessions = await db.query(allSessionsQuery);
 
-        //Check to make sure at least one session has been returned
+        //Query for latest status from subscription table
+        const statusQuery = `SELECT status FROM subscriptions WHERE subscription_id = ${subscriptionId}`;
+        const statusResponse = await db.query(statusQuery);
+
+        //If no sessions, return sessions as false but include current subscription status
         if (allSessions.rowCount < 1) {
-            res.send({ sessions: false });
+            res.status(200).send({ sessions: false, status: statusResponse.rows.status });
         } else {
-            res.send(allSessions.rows);
+            //Pull out just the session details to send back as an array of objects
+            const sessionDetails = Object.values(allSessions.rows);
+            res.status(200).send({ sessions: true, status: statusResponse.rows[0].status, sessionDetails: sessionDetails });
         }
     } catch (error) {
         res.status(500).json({ error: "Unable to get all history data", details: error });
