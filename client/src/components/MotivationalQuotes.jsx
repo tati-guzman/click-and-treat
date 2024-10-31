@@ -5,20 +5,20 @@ const MotivationalQuotes = () => {
 
     //Pull real quote from API endpoints connected to ZenQuotes API - display in modal
     const pullQuote = async (type) => {
-        
+        //Reset the error message if it was previously being shown
         setQuoteError(false);
 
-        console.log("You got this! You can do it! But actually - this will be a real quote displayed to the user not the console");
-        console.log(type);
-        console.log("api request", `api/quotes/${type}`)
-
+        //Send a fetch request specifying which GET route depending on the button pushed
         const response = await fetch(`api/quotes/${type}`);
         
         if (!response.ok) {
+            //Display error message if there is an error retrieving quote
             setQuoteError(true);
         } else {
+            //Set the quote state to the object returned by the server {quote: "", author: ""}
             const quoteToDisplay = await response.json();
 
+            //Update the correct state depending on which button was pushed
             switch (type) {
                 case "daily":
                     setQuoteOfTheDay(quoteToDisplay);
@@ -33,7 +33,7 @@ const MotivationalQuotes = () => {
     //State to toggle modal display
     const [quoteModal, setQuoteModal] = useState(false);
 
-    //Function to reset modal upon close
+    //Function to reset modal upon close - only clear any error messaging, keep the quotes display state
     const closeModal = () => {
         setQuoteError(false);
         setQuoteModal(false);
