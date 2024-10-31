@@ -1,12 +1,15 @@
 //Import necessary functionalities
 import React from 'react';
-import { UserStatus } from '../context/UserContext';
 import MainLayout from '../layout/MainLayout';
+import { useLocation } from 'react-router-dom';
 
 const HistoryList = () => {
 
-    //Import user settings to use in user specific info pulls
-    const { loggedUser, setLoggedUser } = UserStatus();
+     //Call useLocation hook to import all the data sent from UserTrainingPlans component
+     //state holds the following info from UserTrainingPlans: subscription_id, user_id, pet_id, plan_id, status, last_updated, title, petName, stages
+     const { state } = useLocation();
+
+     //'/api/sessions/history/:subscriptionId'
 
     //Use the sessions state to map through each of the sessions for display
 
