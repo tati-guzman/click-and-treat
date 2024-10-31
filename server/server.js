@@ -201,7 +201,7 @@ app.get('/api/sessions/history/:subscriptionId', async (req, res) => {
 
         //If no sessions, return sessions as false but include current subscription status
         if (allSessions.rowCount < 1) {
-            res.status(200).send({ sessions: false, status: statusResponse.rows.status });
+            res.status(200).send({ sessions: false, status: statusResponse.rows[0].status });
         } else {
             //Pull out just the session details to send back as an array of objects
             const sessionDetails = Object.values(allSessions.rows);
