@@ -49,15 +49,33 @@ const HistoryList = () => {
     //State to hold the highest status information from the useEffect
     const [highestStatus, setHighestStatus] = useState("Status Not Available");
 
-    //State to hold the session information pulled from the useEffect
-    // const [sessionsPulled, setSessionsPulled] = useState(null);
+    //Create updated state object to send with updated status
+    state.status = highestStatus;
 
-    //Each session will be wrapped in its own div with the following: session date, stage, user, notes, Show Details button -> this will trigger the SessionDetails component which should be a modal with the detailed information
+    //State to hold the session information pulled from the useEffect
+    const [sessionsPulled, setSessionsPulled] = useState(null);
 
     //Function to map through the session information and format display of the sessions
-    // const displaySessions = () => {
+    const displaySessions = () => {
+        //Function to format the date display
+        const formatDate = (date) => {
+            return new Date(date).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            })
+        };
 
-    // }
+        //Future Tasks: When family connection is implemented, also include user in this display!
+        return sessionsPulled.map((session, index) => (
+                <div key ={index}>
+                    <h4>Session Date: {formatDate(session.date)}</h4>
+                    <p key={index}>Main Focus: Stage {session.stage}</p>
+                    <p key={"notes" + index}>Notes: {session.notes ? session.notes : "N/A"}</p>
+                    {/* <button onClick={openModal(session)}>View Details</button> */} 
+                </div>
+        ))
+    }
     
     return (
        <MainLayout>
@@ -68,13 +86,11 @@ const HistoryList = () => {
                 ? <h3>Oops, we're having trouble pulling data for {petName}. Please try again.</h3>
                 : <h3>Highest Status Reached: {highestStatus}</h3>}
 
-                {/* {sessionsPulled
+                {sessionsPulled
                 ? displaySessions()
-                : <p>{petName} does not have any sessions recorded for "{title}". Return to Dashboard to select a new skill/pet to view or add a new training session!</p>} */}
+                : <p>{petName} does not have any sessions recorded for "{title}". Return to Dashboard to select a new skill/pet to view or add a new training session!</p>}
 
                 <button onClick={() => navigate('/dashboard')}>Return to Dashboard</button>
-                
-                {/* Note for Tati - Future Goal: Need to brainstorm how to send updated status from this query if they return to session form without a new pull from user training plans */}
                 <button onClick={() => navigate('/session', { state: { ...state }})}>Add New Session</button>
 
                 <p>Map through the sessions state to show each individual session</p>
