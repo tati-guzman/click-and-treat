@@ -9,6 +9,9 @@ const SessionForm = ({ state }) => {
     //Variable to hold the number of stages available - will use to configure form radio buttons
     const stageKeys = Object.keys(state.stages);
 
+    //Convert highest skill status reached to number for handleSubmit function
+    const skillLevel = state.status.split(" ").pop();
+
     //Handle change function to update input values
     const handleChange = (event) => {
         //Pull name associated with question -> will translate to column name in database
@@ -28,37 +31,73 @@ const SessionForm = ({ state }) => {
     const [successMessage, setSuccessMessage] = useState(false);
 
     //Handle submit function to POST session details to server/database
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         
         //Print out what would be the submission
         console.log("We'd be submitting now");
         console.log(inputs);
 
-        //Check to make sure the following are inputted: date and stage
-            //If not, display error messages and don't clear any inputs
+        //Check that date and stage are both submitted
+        if (!inputs.date || !inputs.stage) {
+            //Toggle error messages on and exit the function
+            if (!inputs.date) {
+                setDateErrorMessage(true);
+            }
 
-        //If date and stage are included => continue with submission logic
+            if (!inputs.stage) {
+                setStageErrorMessage(true);
+            }
 
-        //If "proceed" was included in submission, check the skill status saved in state
-            //If the stage being practiced is < the highest skill status, do nothing
-            //If the stage being practiced is = or > the highest skill status, send new stage status as part of POST request (adjust server side code to PUT this information in subscriptions table)
+            setFormErrorMessage(true)
+            return
+        } else {
+            //Clear all error messages in case they were visible from previous submission
+            setDateErrorMessage(false);
+            setStageErrorMessage(false);
+            setFormErrorMessage(false);
+        }
+        
+        //If "proceed" question was answered and set as true, check to see if their skill status needs to be updated - we will only update if they practiced a stage = or > than their skill level
+        const newStatus = () => {
+            if (inputs.proceed) {
+                //If they had not previously started or practiced at their highest stage (or higher) set skill status to one level above 
+                if (state.status === "Not Started" || skillLevel <= inputs.stage) {
+                    const newLevel = inputs.stage + 1;
+                    //If that level above is now one level above the limit, set the status to "Mastered"
+                    if (newLevel > stageKeys.length) {
+                        return "Mastered";
+                    } else {
+                        return "Stage " + newLevel;
+                    }
+                }
+            }
+        }
 
-        //Submit inputs through POST request
-        //POST Request should include all the inputs being sent plus the subscription id (and status if applicable)
-        //{...inputs, subscriptionId: subscriptionId, status: status}
+        //Compile request body
+        const submissionData = {...inputs, subscriptionId: state.subscriptionId, status: newStatus};
 
-        //If there is an error with request, do not clear the page and present a message
-            //Today goal: console.log the message
-            //WEEK 3 STYLING GOAL: Implement client-side error handling message for this
+        //Submit data through POST request
+        try {
+            const response = await fetch('/api/sessions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(submissionData)
+            });
 
-        //If that response status is 200 OK:
-            //Today goal: Display a success alert
-            //WEEK 3 STYLING GOAL: Implement client-side success message
-        //Also clear all the inputs
-
+            if(!response.ok) {
+                //If the response has an error, trigger the client-side error message by throwing a new error
+                throw new Error("Error submitting session data");
+            } else {
+                //If successful, show success message and clear the inputs
+                setSuccessMessage(true);
+                setInputs({});
+            }
+        } catch (error) {
+            setFormErrorMessage(true);
+            console.error({ message: "Oopsies, something is going wrong!", details: error });
+        }
     }
-
 
     //STRETCH GOAL: Save Draft function to POST session details (with draft status) to sessions table 
     //STRETCH GOAL: Edit handle submit function to PUT session details while editing prior sessions
