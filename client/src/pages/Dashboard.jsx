@@ -20,9 +20,7 @@ const Dashboard = () => {
 
     return (
         <MainLayout>
-            <div>
-                <h1>Dashboard Component</h1>
-
+            <div className="general">
                 <h2>Welcome back, {loggedUser.name}!</h2>
 
                 <PetInfo setSelectedPet={setSelectedPet}/>

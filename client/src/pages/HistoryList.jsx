@@ -99,7 +99,7 @@ const HistoryList = () => {
     
     return (
        <MainLayout>
-            <div>
+            <div className="general">
                 <h1>{petName}'s Training Sessions for "{title}"</h1>
 
                 {errorMessage 

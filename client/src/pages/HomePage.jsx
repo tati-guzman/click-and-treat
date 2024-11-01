@@ -6,7 +6,7 @@ const HomePage = () => {
 
     return (
         <MainLayout>
-            <div>
+            <div className="general">
                 <h1>Training Made Easier - Click, Treat, and Track!</h1>
                 <h3>Click and Treat is a free training tracker to help you structure and document your pet's training sessions. We know pet training can be hard. We're here to help you celebrate progress, one click and treat at a time!</h3>
 

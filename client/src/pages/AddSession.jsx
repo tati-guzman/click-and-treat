@@ -16,7 +16,7 @@ const AddSession = () => {
     
     return (
         <MainLayout>
-            <div>
+            <div className="general">
                 <h1>{state.petName}'s Training Session for "{state.title}"</h1>
                 <h2>Highest Skill Status Reached: {state.status}</h2>
 

@@ -6,7 +6,7 @@ const About = () => {
 
     return (
         <MainLayout>
-            <div>
+            <div className="general">
                 <div>
                     <h1>Why Click and Treat?</h1>
                     <p>Click and Treat began as a final project for <a href="https://techtonica.org/full-time-program/" target="_blank" rel="noreferrer noopener">Techtonica</a>'s full-time coding program. Click and Treat's founder, <a href="https://www.linkedin.com/in/tati-guzman" target="_blank" rel="noreferrer noopener">Tati Guzman</a>, wanted to build a tool that she herself could use in her every day life.</p>
