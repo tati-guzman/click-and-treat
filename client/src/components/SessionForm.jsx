@@ -123,7 +123,7 @@ const SessionForm = ({ state }) => {
 
                 <form onSubmit={handleSubmit}>
                     
-                    <label htmlFor="date">Date of Training Session</label>
+                    <label htmlFor="date">Date of Training Session</label><br></br>
                     <input 
                         id="date"
                         name="date"
@@ -131,10 +131,10 @@ const SessionForm = ({ state }) => {
                         required
                         value={inputs.date || ""}
                         onChange={handleChange}
-                    />
+                    /><br></br><br></br>
                     {dateErrorMessage && <p>Please enter the date this session took place.</p>}
 
-                    <label>Which stage did you focus on today? Please select the stage you spent the most time reinforcing.</label>
+                    <label>Which stage did you focus on today? Please select the stage you spent the most time reinforcing.</label><br></br>
                     {
                         stageKeys.map((stage, index) => (
                             <div key={index}>
@@ -152,29 +152,29 @@ const SessionForm = ({ state }) => {
                             </div>
                         ))
                     }
-                    {stageErrorMessage && <p>Please select which stage was practiced during this session. A selection is required.</p>}
+                    {stageErrorMessage && <p>Please select which stage was practiced during this session. A selection is required.</p>}<br></br><br></br>
 
-                    <label htmlFor="tasks">Which tasks did you complete today?</label>
+                    <label htmlFor="tasks">Which tasks did you complete today?</label><br></br>
                     <textarea 
                         id="tasks"
                         name="tasks"
                         value={inputs.tasks || ""}
                         onChange={handleChange}
                         placeholder="e.g. Practiced lure back and forth between legs 10 times"
-                    />
+                    /><br></br><br></br>
 
-                    <label htmlFor="notes">Notes: </label>
+                    <label htmlFor="notes">Notes: </label><br></br>
                     <textarea 
                         id="notes"
                         name="notes"
                         value={inputs.notes || ""}
                         onChange={handleChange}
                         placeholder="Was there any confusion? Any successes to highlight?"
-                    />
+                    /><br></br><br></br>
 
                     {state.status !== "Mastered" 
                     ?   <div>
-                            <label>Are you and {state.petName} ready for the next stage?</label>
+                            <label>Are you and {state.petName} ready for the next stage?</label><br></br>
                             <label htmlFor="yes-proceed"><input 
                                 id="yes-proceed"
                                 name="proceed"
@@ -182,7 +182,7 @@ const SessionForm = ({ state }) => {
                                 value="true"
                                 checked={inputs.proceed === true}
                                 onChange={() => setInputs(prevInputs => ({ ...prevInputs, "proceed": true }))}
-                            />Yes</label>
+                            />Yes</label><br></br>
                             <label htmlFor="no-proceed"><input 
                                 id="no-proceed"
                                 name="proceed"
@@ -192,7 +192,7 @@ const SessionForm = ({ state }) => {
                                 onChange={() => setInputs(prevInputs => ({ ...prevInputs, "proceed": false }))}
                             />No</label>
                         </div>
-                    :   null }
+                    :   null }<br></br><br></br>
                     
                     {formErrorMessage && <p>Oops! We're having trouble submitting your form. Please try again.</p>}
                     {successMessage && <p>Woohoo! Your session was submitted successfully. To view your session details and updates to your pets progress, go to "View History".</p>}
