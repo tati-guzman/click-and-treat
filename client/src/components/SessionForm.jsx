@@ -119,7 +119,7 @@ const SessionForm = ({ state }) => {
     
     return (
             <div>
-                <h3>Today's Session Details</h3>
+                <h2>Today's Session Details</h2>
 
                 <form onSubmit={handleSubmit}>
                     
