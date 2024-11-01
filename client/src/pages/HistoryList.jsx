@@ -114,9 +114,6 @@ const HistoryList = () => {
 
                 <button onClick={() => navigate('/dashboard')}>Return to Dashboard</button>
                 <button onClick={() => navigate('/session', { state: { ...state }})}>Add New Session</button>
-
-                <p>Map through the sessions state to show each individual session</p>
-                <button>Session Details - no functionality right now</button>
             </div>
         </MainLayout>
     )
