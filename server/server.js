@@ -182,52 +182,64 @@ app.get('/api/plans/:userId/:petId', async (req, res) => {
     }
 })
 
-//GET Route to pull all session data for each subscription - EDIT WITH SUBSCRIPTION ID
-//'/api/sessions/history/:petId/:planId'
-app.get('/api/sessions/history/:petId/:planId', async (req, res) => {
+//GET Route to pull all session data for each subscription
+//'/api/sessions/history/:subscriptionId'
+app.get('/api/sessions/history/:subscriptionId', async (req, res) => {
     console.log("Getting all history for this pet and training plan");
     
     try {
         //Pull information from parameters to pull appropriate training history
-        const petId = req.params.petId;
-        const planId = req.params.planId;
+        const subscriptionId = req.params.subscriptionId;
 
         //Query for all sessions associated with this pet and plan
-        const allSessionsQuery = `SELECT * FROM sessions WHERE pet_id = ${petId} AND plan_id = ${planId}`;
+        const allSessionsQuery = `SELECT * FROM sessions WHERE subscription_id = ${subscriptionId} ORDER BY date ASC`;
         const allSessions = await db.query(allSessionsQuery);
 
-        //Check to make sure at least one session has been returned
+        //Query for latest status from subscription table
+        const statusQuery = `SELECT status FROM subscriptions WHERE subscription_id = ${subscriptionId}`;
+        const statusResponse = await db.query(statusQuery);
+
+        //If no sessions, return sessions as false but include current subscription status
         if (allSessions.rowCount < 1) {
-            res.send({ sessions: false });
+            res.status(200).send({ sessions: false, status: statusResponse.rows[0].status });
         } else {
-            res.send(allSessions.rows);
+            //Pull out just the session details to send back as an array of objects
+            const sessionDetails = Object.values(allSessions.rows);
+            res.status(200).send({ sessions: true, status: statusResponse.rows[0].status, sessionDetails: sessionDetails });
         }
     } catch (error) {
         res.status(500).json({ error: "Unable to get all history data", details: error });
     }
 })
 
-//POST Route to submit information for a new session - EDIT TO INCLUDE SUBSCRIPTIONS
+//POST Route to submit information for a new session
 //'/sessions/:userId'
 app.post('/api/sessions',async (req, res) => {
     console.log("Creating new session record woohoo");
 
     try {
+        //Hold the request information in a new variable
+        const request = req.body;
+        console.log("request body", request);
+        
+        //Pull out the status into its own variable and delete it from the request object
+        const newStatus = request.status;
+        delete request.status;
+
         //Pull all fields from request
-        const fields = Object.keys(req.body);
+        const fields = Object.keys(request);
 
         //Map into a string with field names and replace camel case with PSQL naming
         const fieldQueryInsert = fields.map((field) => `${field.replace("Id", "_id")}`).join(", ");
 
-        //Pull out values from request body
-        const values = Object.values(req.body);
+        //Pull out values from request
+        const values = Object.values(request);
 
         //Create placeholders for each value
         const placeholders = values.map((_,index) => `$${index + 1}`).join(", ");
 
         //Compile query statement with field names and value placeholders
         const newSessionQuery = `INSERT INTO sessions (${fieldQueryInsert}) VALUES (${placeholders})`;
-
         //Send request to database with values array
         const newSessionInfo = await db.query(newSessionQuery, values);
 
@@ -235,8 +247,24 @@ app.post('/api/sessions',async (req, res) => {
         if (newSessionInfo.rowCount < 1) {
             throw new Error ("Error creating session");
         } else {
-            //Otherwise, send Status 200 OK
-            res.status(200).send();
+            //If that query is successful, check to see if the status needs to be updated
+            if (newStatus) {
+                //Create query statement to update the status and last updated columns for this subscription
+                const subscriptionUpdateInsert = 'UPDATE subscriptions SET status = $1, last_updated = $2 WHERE subscription_id = $3 RETURNING *';
+                
+                //Send query with relevant variables
+                const subscriptionUpdateQuery = await db.query(subscriptionUpdateInsert, [newStatus, request.date, request.subscriptionId]);
+
+                //If there is an error, send back error to trigger client-side error handling message
+                if (subscriptionUpdateQuery.rowCount < 1) {
+                    throw new Error ("Error updating subscription table");
+                } else {
+                    //If successful, send Status 200 OK
+                    res.status(200).send();
+                }
+            } else {
+                res.status(200).send();
+            }  
         }
     } catch (error) {
         res.status(500).json({ error: "Unable to record this session's details", details: error});
@@ -430,7 +458,7 @@ app.put('/api/family', async (req, res) => {
 
 //********** Third Party API Calls (3) **********
 //GET request to fetch the motivational quote of the day
-app.get('/quotes/daily', async (req, res) => {
+app.get('/api/quotes/daily', async (req, res) => {
     const url = 'https://zenquotes.io/api/today/';
 
     console.log("Fetching quote of the day!");
@@ -439,7 +467,7 @@ app.get('/quotes/daily', async (req, res) => {
         //Response is parsed into json format
         .then((res) => res.json())
         //JSON is sent to the front end
-        .then((quote) => res.send(quote))
+        .then((quote) => res.send({quote: quote[0].q, author: quote[0].a}))
         //If there is an error, the details will be logged to the console FOR NOW
             //This needs to be updated to have better error handling
         .catch((err) => {
@@ -448,7 +476,7 @@ app.get('/quotes/daily', async (req, res) => {
 })
 
 //GET request to fetch a list of motivational quotes
-app.get('/quotes/list', async (req, res) => {
+app.get('/api/quotes/list', async (req, res) => {
     const url = 'https://zenquotes.io/api/quotes/';
     
     console.log("Fetching list of quotes!");
@@ -467,7 +495,7 @@ app.get('/quotes/list', async (req, res) => {
 })
 
 //GET request to fetch a single random quote
-app.get('/quotes/random', async (req, res) => {
+app.get('/api/quotes/random', async (req, res) => {
     const url = 'https://zenquotes.io/api/random/';
 
     console.log("Fetching single random quote!");
@@ -476,7 +504,7 @@ app.get('/quotes/random', async (req, res) => {
         //Response is parsed into json format
         .then((res) => res.json())
         //JSON is sent to the front end
-        .then((quote) => res.send(quote))
+        .then((quote) => res.send({quote: quote[0].q, author: quote[0].a}))
         //If there is an error, the details will be logged to the console FOR NOW
             //This needs to be updated to have better error handling
         .catch((err) => {

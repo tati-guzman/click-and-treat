@@ -24,7 +24,7 @@ const AddSession = () => {
 
                 <SessionForm state={state} />
 
-                <button onClick={() => navigate('/history/')}>View History</button>
+                <button onClick={() => navigate('/history/', { state: { ...state }})}>View History</button>
             </div>
         </MainLayout>
     )
