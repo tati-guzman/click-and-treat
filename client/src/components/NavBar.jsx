@@ -28,8 +28,8 @@ const NavBar = () => {
             ? <h1 onClick={() => navigate('/dashboard')} className="nav">Click and Treat</h1>
             : <h1 onClick={() => navigate('/homepage')} className="nav">Click and Treat</h1>}
             
-            <h4 onClick={() => navigate('/about')}>About</h4>
-            <h4 onClick={() => navigate('/examples')}>Example Training Plans</h4>
+            <p onClick={() => navigate('/about')}>About</p>
+            <p onClick={() => navigate('/examples')}>Example Training Plans</p>
 
             {loggedUser 
             ? <div>

@@ -32,15 +32,15 @@ nav {
     justify-content: space-between;
     padding: 0px 15px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
 
-.nav {
     font-family: "DynaPuff", system-ui;
     font-optical-sizing: auto;
     font-weight: 400;
     font-style: normal;
     font-variation-settings:
       "wdth" 100;
+
+    align-items: center;
 }
 
 nav h1:hover {
@@ -48,7 +48,7 @@ nav h1:hover {
     color: #bc2d45;
 }
 
-nav h4:hover {
+nav p:hover {
     cursor: pointer;
     color: #bc2d45;
 }
