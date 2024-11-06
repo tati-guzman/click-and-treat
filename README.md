@@ -74,11 +74,13 @@ Navigate to [http://localhost:5173](http://localhost:5173) to interact with the 
 
 **User Dashboard**
 
-![Screenshot 2024-10-29 at 1 31 24 PM](https://github.com/user-attachments/assets/5ede3677-a0c1-4909-89a7-2e349d753536)
+<img width="884" alt="Screenshot 2024-11-05 at 6 54 02 PM" src="https://github.com/user-attachments/assets/f3b016a1-6f34-4e54-b132-aba6772ca424">
+
 
 **Session Form**
 
-![Screenshot 2024-10-29 at 1 38 25 PM](https://github.com/user-attachments/assets/b923bc0f-4d38-4147-9e59-aa085f8fa2d9)
+<img width="830" alt="Screenshot 2024-11-05 at 6 53 37 PM" src="https://github.com/user-attachments/assets/19f467ad-7941-469d-80bc-c8667164e285">
+
 
 ### Initial Planning
 
