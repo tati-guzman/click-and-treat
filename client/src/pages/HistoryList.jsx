@@ -62,7 +62,7 @@ const HistoryList = () => {
         //Future Tasks: When family connection is implemented, also include user in this display!
         return sessionsPulled.map((session, index) => (
                 <div key ={index}>
-                    <h4>Session Date: {formatDate(session.date)}</h4>
+                    <h3>Session Date: {formatDate(session.date)}</h3>
                     <p key={index}>Main Focus: Stage {session.stage}</p>
                     <p key={"notes" + index}>Notes: {session.notes ? session.notes : "N/A"}</p>
                     <button onClick={() => openDetails(session)}>View Details</button>
@@ -99,12 +99,12 @@ const HistoryList = () => {
     
     return (
        <MainLayout>
-            <div>
+            <div className="general">
                 <h1>{petName}'s Training Sessions for "{title}"</h1>
 
                 {errorMessage 
-                ? <h3>Oops, we're having trouble pulling data for {petName}. Please try again.</h3>
-                : <h3>Highest Status Reached: {highestStatus}</h3>}
+                ? <h2>Oops, we're having trouble pulling data for {petName}. Please try again.</h2>
+                : <h2>Highest Status Reached: {highestStatus}</h2>}
 
                 {sessionsPulled
                 ? displaySessions()
@@ -114,9 +114,6 @@ const HistoryList = () => {
 
                 <button onClick={() => navigate('/dashboard')}>Return to Dashboard</button>
                 <button onClick={() => navigate('/session', { state: { ...state }})}>Add New Session</button>
-
-                <p>Map through the sessions state to show each individual session</p>
-                <button>Session Details - no functionality right now</button>
             </div>
         </MainLayout>
     )

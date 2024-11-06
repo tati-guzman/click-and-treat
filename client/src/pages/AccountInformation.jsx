@@ -9,7 +9,7 @@ const AccountInformation = () => {
 
     return (
         <MainLayout>
-            <div>
+            <div className="general">
                 <h1>Account Information Page</h1>
                 <p>Needs to include account info form, pet info form, and stretch goal of connecting to other users (also a form)</p>
 

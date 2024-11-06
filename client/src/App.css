@@ -1,11 +1,82 @@
-.app {
-    background-color: lightpink;
+/* General Styles */
+body {
+    /* font-family: "Montserrat", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal; */
+
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+
+    background-color: #fcd0a1;
+    color: #6d1a36;
+
+    margin: 0;
+    padding: 0;
 }
 
-h1 {
-    color: purple;
+h1, h2, h3, h4 {
+    font-family: "DynaPuff", system-ui;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings:
+      "wdth" 100;
 }
 
+/* Navbar Styles */
+nav {
+    background-color: #b1b695;
+    display: flex;
+    justify-content: space-between;
+    padding: 0px 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    font-family: "DynaPuff", system-ui;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings:
+      "wdth" 100;
+
+    align-items: center;
+}
+
+nav h1:hover {
+    cursor: pointer;
+    color: #bc2d45;
+}
+
+nav p:hover {
+    cursor: pointer;
+    color: #bc2d45;
+}
+
+button {
+   background-color: #b1b695;
+   display: inline-block;
+   margin: 10px;
+   font-size: 0.95rem;
+   border: solid;
+   border-radius: 10px;
+   padding: 10px;
+   color: #6d1a36;
+
+   font-family: "DynaPuff", system-ui;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings:
+      "wdth" 100;
+}
+
+button:hover {
+    cursor: pointer;
+    background-color: #dcdecf;
+}
+
+/* Modal Styles */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -20,9 +91,14 @@ h1 {
 }
 
 .modal-content {
-    background: #ED6F3E;
+    background-color: #b1b695;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     text-align: center;
 }
+
+.general {
+    padding: 1.5rem;
+}
+

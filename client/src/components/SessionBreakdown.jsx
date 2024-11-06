@@ -22,7 +22,7 @@ const SessionBreakdown = ({ state }) => {
   
     return (
             <div>
-                <h3>Training Stages & Details</h3>
+                <h2>Training Stages & Details</h2>
 
                 <div>
                     {displayStages()}
