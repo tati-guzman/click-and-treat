@@ -43,7 +43,7 @@ const PetInfo = ({ setSelectedPet }) => {
     const formatPetDisplay = () => {
         return petInfo.map((pet, index) => (
             <div key={index}>
-                <h4>Pet Name: {pet.name}</h4>
+                <p>Pet Name: {pet.name}</p>
                 <p>Species: {pet.species}</p>
                 <button onClick={() => selectPet(index)}>View Training Plans</button>
             </div>

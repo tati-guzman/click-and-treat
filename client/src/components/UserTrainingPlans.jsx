@@ -56,7 +56,7 @@ const UserTrainingPlans = ({ selectedPet }) => {
         } else {
             return trainingPlans.map((plan, index) => (
                 <div key={index}>
-                    <h4>Skill Name: {plan.title}</h4>
+                    <p>Skill Name: {plan.title}</p>
                     <p>Skill Status: {plan.status}</p>
                     <button onClick={() => navigate('/session', {state: {...plan, petName: selectedPet.petName }})}>Add Session</button>
                     <button onClick={() => navigate('/history', {state: {...plan, petName: selectedPet.petName }})}>View History</button>
