@@ -8,6 +8,7 @@ import { MemoryRouter } from 'react-router-dom';
 describe('Home Page', () => {
     //Choosing to just test for level 3 headers without specifying the words in case they change in the future
     test('renders the h3 headers for app information', () => {
+      //Mocking no logged user for homepage
         render(<MemoryRouter><UserContextProvider value={{loggedUser: null}}><HomePage /></UserContextProvider></MemoryRouter>);
 
         const headers = screen.getAllByRole('heading', { level: 3 });
