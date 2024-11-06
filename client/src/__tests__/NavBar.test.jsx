@@ -3,10 +3,8 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter, useNavigate } from 'react-router-dom';
 import { vi } from 'vitest';
 
-import UserContextProvider from '../context/UserContext';
-// import { UserStatus } from '../context/UserContext.jsx';
+import UserContextProvider, { UserStatus } from '../context/UserContext';
 import NavBar from '../components/NavBar';
-// import LogIn from '../components/LogIn';
 
 //Set up a mock of useNavigate by importing react router dom and then setting useNavigate to a mock state
 vi.mock('react-router-dom', async () => {
@@ -17,6 +15,14 @@ vi.mock('react-router-dom', async () => {
   };
 });
 
+//Set up a mock of UserStatus to simulate the loggedUser state
+vi.mock(import('../context/UserContext'), async (importOriginal) => {
+    const actual = await importOriginal();
+    return {
+        ...actual,
+        UserStatus: vi.fn(),
+    };
+});
 
 describe('Navigation Bar', () => {
     //Create a variable to hold the mock navigation with the same name as what is in the code before each test
@@ -33,9 +39,14 @@ describe('Navigation Bar', () => {
     });
 
     test('navigates to the correct page when clicking on navigation items', () => {
-        //Check navigation if there is no logged user
-        render(<MemoryRouter><UserContextProvider value={{ loggedUser: null }}><NavBar /></UserContextProvider></MemoryRouter>
-        );
+        //Mock UserStatus to return no users
+        vi.mocked(UserStatus).mockReturnValue({
+            loggedUser: null,
+            setLoggedUser: vi.fn(),
+        });
+        
+        //Render NavBar with just the router (since user context is mocked)
+        render(<MemoryRouter><NavBar /></MemoryRouter>);
 
         //'Click and Treat' is the logo stand in that should return home
         fireEvent.click(screen.getByText('Click and Treat'));
@@ -51,9 +62,14 @@ describe('Navigation Bar', () => {
     });
 
     test('renders Log In and Create an Account buttons when loggedUser is null', () => {
-        //Rendering with loggedUser as null
-        render(<MemoryRouter><UserContextProvider value={{ loggedUser: null }}><NavBar /></UserContextProvider></MemoryRouter>
-        );
+        //Mock UserStatus to return no users
+        vi.mocked(UserStatus).mockReturnValue({
+            loggedUser: null,
+            setLoggedUser: vi.fn(),
+        });
+        
+        //Render NavBar with just the router (since user context is mocked)
+        render(<MemoryRouter><NavBar /></MemoryRouter>);
 
         //Find log in button and make assertion
         const logInButton = screen.getByRole('button', { name: 'Log In' });
@@ -64,4 +80,37 @@ describe('Navigation Bar', () => {
         expect(createAccountButton).toBeInTheDocument();
     });
 
+    test('renders Account Information and Log Out buttons if user is logged in', () => {
+        //Mock UserStatus to return user data
+        vi.mocked(UserStatus).mockReturnValue({
+            loggedUser: { userId: 'testId' },
+            setLoggedUser: vi.fn(),
+        });
+        
+        //Render NavBar with just the router (since user context is mocked)
+        render(<MemoryRouter><NavBar /></MemoryRouter>);
+
+        //Find Account Information button and make assertion
+        const accountInfoButton = screen.getByRole('button', { name: 'Account Information'});
+        expect(accountInfoButton).toBeInTheDocument();
+
+        //Find Log Out button and make assertion
+        const logOutButton = screen.getByRole('button', { name: 'Log Out'});
+        expect(logOutButton).toBeInTheDocument();
+    });
+
+    test('navigates to dashboard when clicking on "Click and Treat" when logged in', () => {
+        //Mock UserStatus to return user data
+        vi.mocked(UserStatus).mockReturnValue({
+            loggedUser: { userId: 'testId' },
+            setLoggedUser: vi.fn(),
+        });
+        
+        //Render NavBar with just the router (since user context is mocked)
+        render(<MemoryRouter><NavBar /></MemoryRouter>);
+
+        // Test navigation on "Click and Treat" when logged in
+        fireEvent.click(screen.getByText('Click and Treat'));
+        expect(navigate).toHaveBeenCalledWith('/dashboard');
+    });
 });
