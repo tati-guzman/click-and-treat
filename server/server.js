@@ -71,6 +71,43 @@ app.post('/api/users/new', async (req, res) => {
     }
 })
 
+//POST Route to log user in
+app.post('/api/users/login', async (req, res) => {
+    console.log("Logging in user!");
+    
+    try {
+        //Deconstruct the request body to use in the queries
+        const { email, password } = req.body;
+
+        //Check that the user exists and return user data if so
+        const checkUserQuery = 'SELECT * FROM users WHERE email = $1';
+        const checkUser = await db.query(checkUserQuery, [email]);
+
+        if (checkUser.rows.length < 1) {
+            //No rows are returned when the email is not found - send error handling
+            res.status(404).json({ exists: false, error: "User details not found." });
+        } else {
+            //Pull out data returned from query
+            const userData = checkUser.rows[0];
+
+            //Compare the stored password with the password entered by user
+            if (await bcrypt.compare(password, userData.password)) {
+                res.status(200).json({ exists: true, authorized: true, userId: userData.userId, name: userData.name });
+            } else {
+                res.status(500).json({ exists: true, authorized: false, error: "Incorrect password" });
+            }
+        } 
+    } catch (error) {
+        res.status(500).send({ message: "Unable to create new user", details: error });
+    }
+})
+
+
+
+
+
+
+
 //POST Route to check log in by checking username (using for testing only) - Also use for family connection!
 app.post('/api/users/', async (req, res) => {
     console.log("Pulling user id");
