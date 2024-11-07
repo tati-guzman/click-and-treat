@@ -1,6 +1,7 @@
-//Import frameworks for app
+//Import frameworks for app and log in
 import express from 'express';
 import cors from 'cors';
+import bcrypt from 'bcryptjs';
 
 //PROD: Import frameworks for deployment
 // import path, { dirname } from 'path';
@@ -29,8 +30,46 @@ app.use(express.json());
 
 //All Planned Routes
 
-//POST Route to create a new user - UPDATE ONCE LOG IN IS COMPLETE
-//'/users'
+//********* ACCOUNT AND LOG IN SECTION **********
+
+//POST Route to create a new user account
+app.post('/api/users/new', async (req, res) => {
+    console.log("Creating new user account! Welcome!");
+    
+    try {
+        //Deconstruct the request body to use in the queries
+        const { name, email, password } = req.body;
+
+        //Check that the user does not already exist
+        const checkUserQuery = 'SELECT EXISTS(SELECT email FROM users WHERE email = $1)';
+        const checkUser = await db.query(checkUserQuery, [email]);
+
+        if (checkUser.rows.length < 1) {
+            //If there is no response (should be true or false) send error to client
+            throw new Error ("Error checking username existence");
+        } else if (checkUser.rows[0].exists) {
+            //If the response is true, this user already exists. Exit request and send status to client for error handling.
+            res.status(500).send({ newUser: false });
+        } else {
+            //Create a hashed password using bcrypt and salt rounds
+            const hashedPassword = await bcrypt.hash(password, 10);
+
+            //Send query to post new user info with hashed password
+            const createUserQuery = 'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING name';
+            const createUser = await db.query(createUserQuery, [name, email, hashedPassword]);
+            
+            if (createUser.rows.length < 1) {
+                throw new Error ("Error creating new user");
+            } else {
+                 //Store new values to send back to client for display
+                const newUser = createUser.rows[0];
+                res.status(200).send({ newUser: true, ...newUser });
+            }
+        }
+    } catch (error) {
+        res.status(500).send({ message: "Unable to create new user", details: error });
+    }
+})
 
 //POST Route to check log in by checking username (using for testing only) - Also use for family connection!
 app.post('/api/users/', async (req, res) => {
