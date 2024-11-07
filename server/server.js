@@ -49,7 +49,7 @@ app.post('/api/users/new', async (req, res) => {
             throw new Error ("Error checking username existence");
         } else if (checkUser.rows[0].exists) {
             //If the response is true, this user already exists. Exit request and send status to client for error handling.
-            res.status(500).send({ newUser: false });
+            res.status(500).json({ newUser: false });
         } else {
             //Create a hashed password using bcrypt and salt rounds
             const hashedPassword = await bcrypt.hash(password, 10);
@@ -63,11 +63,11 @@ app.post('/api/users/new', async (req, res) => {
             } else {
                  //Store new values to send back to client for display
                 const newUser = createUser.rows[0];
-                res.status(200).send({ newUser: true, ...newUser });
+                res.status(200).json({ newUser: true, ...newUser });
             }
         }
     } catch (error) {
-        res.status(500).send({ message: "Unable to create new user", details: error });
+        res.status(500).json({ message: "Unable to create new user", details: error });
     }
 })
 
