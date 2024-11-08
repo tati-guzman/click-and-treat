@@ -72,7 +72,6 @@ const LogInModal = ({ isOpen, onClose }) => {
         }
     }
 
-    
     //State to hold inputted information
     const [credentials, setCredentials] = useState({});
 
@@ -86,6 +85,12 @@ const LogInModal = ({ isOpen, onClose }) => {
 
         //Update credentials state to hold all inputted answers
         setCredentials(prevCredentials => ({ ...prevCredentials, [name]: value }));
+    }
+
+    //Function to clear inputs and exit modal
+    const cancel = () => {
+        setCredentials({});
+        onClose();
     }
     
     return (
@@ -111,6 +116,7 @@ const LogInModal = ({ isOpen, onClose }) => {
                     /><br></br><br></br>
                     
                     <button type="submit">Log In</button>
+                    <button onClick={cancel}>Cancel</button>
 
                     {formErrorMessage ? <p>{formErrorMessage}</p> : null}
                 </form>
