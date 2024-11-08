@@ -13,8 +13,12 @@ const LogInModal = ({ isOpen, onClose }) => {
     //Call useNavigate hook to change component display upon log in
     const navigate = useNavigate();
 
+    //State to hold various error messages
+    const [formErrorMessage, setFormErrorMessage] = useState(null);
+
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setFormErrorMessage(null);
         
         //Check that correct value is being submitted right now
         console.log(event.currentTarget.email.value);
@@ -57,16 +61,14 @@ const LogInModal = ({ isOpen, onClose }) => {
                     //Close the modal
                     onClose();
                 } else {
-                    //Client side error handling to ask them to try again - need to update once log in is fleshed out
-                    console.log("Username does not exist.");
+                    setFormErrorMessage("Invalid username or password.");
                 }
             } catch (error) {
-                //Update this error handling as well once log in is complete
-                console.error({ message: "Error checking user name", details: error });
+                setFormErrorMessage("Please try again.");
+                console.error({ message: "Error checking credentials", details: error });
             }
         } else {
-            //Placeholder alert for temporary error handling
-            alert("Please make sure to enter an email.");
+            setFormErrorMessage("Please enter a username and password.");
         }
     }
 
@@ -97,7 +99,7 @@ const LogInModal = ({ isOpen, onClose }) => {
                         name="email"
                         value={credentials.email || ""}
                         onChange={handleChange}
-                    /><br></br>
+                    /><br></br><br></br>
 
                     <label htmlFor="password">Password</label><br></br>
                     <input
@@ -106,10 +108,11 @@ const LogInModal = ({ isOpen, onClose }) => {
                         name="password"
                         value={credentials.password || ""}
                         onChange={handleChange}
-                    /><br></br>
+                    /><br></br><br></br>
                     
-
                     <button type="submit">Log In</button>
+
+                    {formErrorMessage ? <p>{formErrorMessage}</p> : null}
                 </form>
             </div>
         </div>
