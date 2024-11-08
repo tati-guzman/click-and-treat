@@ -91,6 +91,12 @@ const NewAccountModal = ({ isOpen, onClose }) => {
         }        
     }
 
+    //Function to clear inputs and exit modal
+    const cancel = () => {
+        setAccountDetails({});
+        onClose();
+    }
+
     return (
         <div className="modal-overlay" onClick={onClose}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -134,6 +140,7 @@ const NewAccountModal = ({ isOpen, onClose }) => {
                     {!passwordMatch && confirmedPassword && <p>Passwords do not match</p>}
                     
                     <button type="submit">Create Account</button>
+                    <button onClick={cancel}>Cancel</button>
 
                     {formErrorMessage && <p>{formErrorMessage}</p>}
                 </form>
