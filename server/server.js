@@ -75,7 +75,7 @@ app.post('/api/users/new', async (req, res) => {
             throw new Error ("Error checking username existence");
         } else if (checkUser.rows[0].exists) {
             //If the response is true, this user already exists. Exit request and send status to client for error handling.
-            res.status(500).json({ newUser: false });
+            res.json({ newUser: false });
         } else {
             //Create a hashed password using bcrypt and salt rounds
             const hashedPassword = await bcrypt.hash(password, 10);
@@ -111,7 +111,7 @@ app.post('/api/users/login', async (req, res) => {
 
         if (checkUser.rows.length < 1) {
             //No rows are returned when the email is not found - send error handling
-            res.status(404).json({ exists: false, error: "User details not found." });
+            res.json({ exists: false, error: "User details not found." });
         } else {
             //Pull out data returned from query
             const userData = checkUser.rows[0];
@@ -128,7 +128,7 @@ app.post('/api/users/login', async (req, res) => {
                 //Send back the info we want and the access token
                 res.status(200).json({ exists: true, authorized: true, userId: userId, name: name, accessToken: accessToken });
             } else {
-                res.status(500).json({ exists: true, authorized: false, error: "Incorrect password" });
+                res.json({ exists: true, authorized: false, error: "Incorrect password" });
             }
         } 
     } catch (error) {
