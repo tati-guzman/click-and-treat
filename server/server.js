@@ -38,6 +38,26 @@ app.use(express.json());
 
 //********* ACCOUNT AND LOG IN SECTION **********
 
+//Function to check access tokens before authorizing the route
+const checkAccessToken = (req, res, next) => {
+    //Pull access token from the request headers
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token) {
+        return res.status(401).json({ authorized: false, details: "Error finding Access Token" });
+    }
+
+    try {
+        //Verify the token that was sent
+        const verifiedUser = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        req.user = verifiedUser;
+        next();
+    } catch (error) {
+        res.status(403).json({ authorized: false, details: "Token not valid", error: error });
+    }
+}
+
 //POST Route to create a new user account
 app.post('/api/users/new', async (req, res) => {
     console.log("Creating new user account! Welcome!");
