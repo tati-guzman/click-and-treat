@@ -1,8 +1,12 @@
 //----------------------------------- General Set Up --------------------------------
+import dotenv from 'dotenv';
+dotenv.config();
+
 //Import frameworks for app and log in
 import express from 'express';
 import cors from 'cors';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 //PROD: Import frameworks for deployment
 // import path, { dirname } from 'path';
@@ -94,21 +98,23 @@ app.post('/api/users/login', async (req, res) => {
 
             //Compare the stored password with the password entered by user
             if (await bcrypt.compare(password, userData.password)) {
-                res.status(200).json({ exists: true, authorized: true, userId: userData.userId, name: userData.name });
+                //Pull out relevant variables from userData
+                const userId = userData.userId;
+                const name = userData.name;
+
+                //Create JWT Access Token to use for authorization
+                const accessToken = jwt.sign({ userId: userId } , process.env.ACCESS_TOKEN_SECRET);
+                
+                //Send back the info we want and the access token
+                res.status(200).json({ exists: true, authorized: true, userId: userId, name: name, accessToken: accessToken });
             } else {
                 res.status(500).json({ exists: true, authorized: false, error: "Incorrect password" });
             }
         } 
     } catch (error) {
-        res.status(500).send({ message: "Unable to create new user", details: error });
+        res.status(500).send({ message: "Unable to log in user", details: error });
     }
 })
-
-
-
-
-
-
 
 //POST Route to check log in by checking username (using for testing only) - Also use for family connection!
 app.post('/api/users/', async (req, res) => {
