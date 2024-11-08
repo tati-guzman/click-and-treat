@@ -81,7 +81,7 @@ app.post('/api/users/new', async (req, res) => {
             const hashedPassword = await bcrypt.hash(password, 10);
 
             //Send query to post new user info with hashed password
-            const createUserQuery = 'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING name';
+            const createUserQuery = 'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING name, user_id';
             const createUser = await db.query(createUserQuery, [name, email, hashedPassword]);
             
             if (createUser.rows.length < 1) {
@@ -89,7 +89,14 @@ app.post('/api/users/new', async (req, res) => {
             } else {
                  //Store new values to send back to client for display
                 const newUser = createUser.rows[0];
-                res.status(200).json({ newUser: true, ...newUser });
+                const userId = newUser.user_id;
+                const name = newUser.name;
+
+                //Create JWT Access Token to use for authorization
+                const accessToken = jwt.sign({ userId: userId } , process.env.ACCESS_TOKEN_SECRET);
+
+                //Send back all needed info to sign user in immediately
+                res.status(200).json({ newUser: true, name: name, userId: userId, accessToken: accessToken });
             }
         }
     } catch (error) {
