@@ -1,3 +1,4 @@
+//----------------------------------- General Set Up --------------------------------
 //Import frameworks for app and log in
 import express from 'express';
 import cors from 'cors';
@@ -16,6 +17,7 @@ const PORT = process.env.PORT || 8030;
 app.use(cors());
 app.use(express.json());
 
+// ********** PRODUCTION CODE *********
 //PROD: Construct path to build folder in ES Modules
 // const __filename = fileURLToPath(import.meta.url);
 // const __dirname = dirname(__filename);
@@ -28,7 +30,7 @@ app.use(express.json());
 //     res.sendFile(path.join(__dirname, '../client/dist', 'index.html'))
 // })
 
-//All Planned Routes
+//----------------------------------- All Routes --------------------------------
 
 //********* ACCOUNT AND LOG IN SECTION **********
 
