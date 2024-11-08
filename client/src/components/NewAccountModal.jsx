@@ -1,11 +1,15 @@
 //Import necessary functionalities
 import React, { useState, useEffect } from 'react';
 import { UserStatus } from '../context/UserContext';
+import { useNavigate } from 'react-router-dom';
 
 const NewAccountModal = ({ isOpen, onClose }) => {
 
     if (!isOpen) return null;
     
+    //Call useNavigate hook to change component display upon log in
+    const navigate = useNavigate();
+
     //Import user settings to use in user updates
     const { loggedUser, setLoggedUser } = UserStatus();
 
@@ -15,16 +19,50 @@ const NewAccountModal = ({ isOpen, onClose }) => {
     //Create new user account with submitted form information
     const handleSubmit = async (event) => {
         event.preventDefault();
-        //Error handling - do not clear form data if there is an error but display info for the user
-
-        //IF THE POST REQUEST IS SUCCESSFUL:
-        //setLoggedUser(the returned user id)
-        //setComponent('dashboard')
-        //onClose();
-        //({ newUser: true, name: name, userId: userId, accessToken: accessToken })
+       
+        //Clear messages from previous submit attempts
         setFormErrorMessage(null);
         
-       
+        //If on submission, there is a username submitted, send it to the server to check its existence
+        if (Object.keys(accountDetails).length === 3 && passwordMatch) {
+            try {
+                const response = await fetch('/api/users/new', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(accountDetails)
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to create account");
+                }
+
+                const newAccount = await response.json();
+
+                //If there is a user with this username, account was not created. Set error message.
+                if (!newAccount.newUser) {
+                    setFormErrorMessage("An account for this email already exists.");
+                } else {
+                    //Set the logged user state to the user id we will need to get the correct data
+                    setLoggedUser({userId: newAccount.userId, name: newAccount.name});
+                    
+                    //Store access token locally to be used for authorization of all server calls
+                    localStorage.setItem("token", newAccount.accessToken);
+
+                    //Switch to dashboard display
+                    navigate('/dashboard');
+                    
+                    //Close the modal
+                    onClose();   
+                }
+            } catch (error) {
+                setFormErrorMessage("Please try again.");
+                console.error({ message: "Error creating account", details: error });
+            }
+        } else {
+            setFormErrorMessage("All fields are required.");
+        }
     }
 
     //States to hold message visibility
