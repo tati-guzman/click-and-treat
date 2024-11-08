@@ -45,19 +45,15 @@ const LogInModal = ({ isOpen, onClose }) => {
 
                 //If there is a user with this username, log them in
                 if (userStatus.exists && userStatus.authorized) {
-                    //{ exists: true, authorized: true, userId: userId, name: name, accessToken: accessToken }
-
                     //Set the logged user state to the user id we will need to get the correct data
                     setLoggedUser({userId: userStatus.userId, name: userStatus.name});
-
-                    //IF THIS WORKS -> WORK THROUGH ADDING IN THE TOKEN?
+                    
+                    //Store access token locally to be used for authorization of all server calls
+                    localStorage.setItem("token", userStatus.accessToken);
 
                     //Switch to dashboard display
                     navigate('/dashboard');
                     
-                    //Potentially use to combat losing user on refresh:
-                    // localStorage.setItem("user", userStatus.userId);
-
                     //Close the modal
                     onClose();
                 } else {
@@ -101,7 +97,7 @@ const LogInModal = ({ isOpen, onClose }) => {
                         name="email"
                         value={credentials.email || ""}
                         onChange={handleChange}
-                    />
+                    /><br></br>
 
                     <label htmlFor="password">Password</label><br></br>
                     <input
@@ -110,7 +106,7 @@ const LogInModal = ({ isOpen, onClose }) => {
                         name="password"
                         value={credentials.password || ""}
                         onChange={handleChange}
-                    />
+                    /><br></br>
                     
 
                     <button type="submit">Log In</button>
