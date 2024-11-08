@@ -1,5 +1,5 @@
 //Import necessary functionalities
-import React from 'react';
+import React, { useState } from 'react';
 import { UserStatus } from '../context/UserContext.jsx';
 import { useNavigate } from 'react-router-dom';
 
@@ -17,22 +17,24 @@ const LogInModal = ({ isOpen, onClose }) => {
         event.preventDefault();
         
         //Check that correct value is being submitted right now
-        console.log(event.currentTarget.username.value);
+        console.log(event.currentTarget.email.value);
 
         //Set the value of the username input field to be stored in username variable
-        const username = event.currentTarget.username.value;
+        const email = event.currentTarget.email.value;
 
-        //Future Plans: Add in password functionality - OAuth?
+        //Create variable for the password
+        const password = event.currentTarget.password.value;
+        console.log(password);
 
         //If on submission, there is a username submitted, send it to the server to check its existence
-        if (username) {
+        if (email && password) {
             try {
-                const response = await fetch('/api/users/', {
+                const response = await fetch('/api/users/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ username })
+                    body: JSON.stringify({ email: email, password: password })
                 });
 
                 if (!response.ok) {
@@ -42,10 +44,13 @@ const LogInModal = ({ isOpen, onClose }) => {
                 const userStatus = await response.json();
 
                 //If there is a user with this username, log them in
-                if (userStatus.exists) {
-                    
+                if (userStatus.exists && userStatus.authorized) {
+                    //{ exists: true, authorized: true, userId: userId, name: name, accessToken: accessToken }
+
                     //Set the logged user state to the user id we will need to get the correct data
                     setLoggedUser({userId: userStatus.userId, name: userStatus.name});
+
+                    //IF THIS WORKS -> WORK THROUGH ADDING IN THE TOKEN?
 
                     //Switch to dashboard display
                     navigate('/dashboard');
@@ -64,25 +69,49 @@ const LogInModal = ({ isOpen, onClose }) => {
                 console.error({ message: "Error checking user name", details: error });
             }
         } else {
-            //Placeholder alert for temporary error handling - will implement robust form error handling while building out full log in component in Week 3
-            alert("Please make sure to enter a username.");
+            //Placeholder alert for temporary error handling
+            alert("Please make sure to enter an email.");
         }
     }
 
+    
+    //State to hold inputted information
+    const [credentials, setCredentials] = useState({});
 
+    //Create handleChange function to update state holding inputs
+    const handleChange = (event) => {
+        //Pull name associated with question -> will translate to column name in database
+        const name = event.target.name;
+
+        //Pull value inputted to answer field to save for form submission
+        const value = event.target.value;
+
+        //Update credentials state to hold all inputted answers
+        setCredentials(prevCredentials => ({ ...prevCredentials, [name]: value }));
+    }
     
     return (
         <div className="modal-overlay" onClick={onClose}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <form onSubmit={handleSubmit}>
-                    <label htmlFor="username">Pick User</label><br></br>
-                    <select name="username">
-                        <option key="1" value="user1">Test User 1</option>
-                        <option key="2" value="user2">Test User 2</option>
-                        <option key="3" value="user3">Test User 3</option>
-                        <option key="4" value="user4">Test User 4</option>
-                        <option key="5" value="user5">Test User 5</option>        
-                    </select>
+                    <label htmlFor="email">Email</label><br></br>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={credentials.email || ""}
+                        onChange={handleChange}
+                    />
+
+                    <label htmlFor="password">Password</label><br></br>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        value={credentials.password || ""}
+                        onChange={handleChange}
+                    />
+                    
 
                     <button type="submit">Log In</button>
                 </form>
