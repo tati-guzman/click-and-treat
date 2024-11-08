@@ -119,7 +119,7 @@ app.post('/api/users/login', async (req, res) => {
             //Compare the stored password with the password entered by user
             if (await bcrypt.compare(password, userData.password)) {
                 //Pull out relevant variables from userData
-                const userId = userData.userId;
+                const userId = userData.user_id;
                 const name = userData.name;
 
                 //Create JWT Access Token to use for authorization
