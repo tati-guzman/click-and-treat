@@ -20,7 +20,7 @@ const LogInModal = ({ isOpen, onClose }) => {
         event.preventDefault();
         setFormErrorMessage(null);
 
-        //If on submission, there is a username submitted, send it to the server to check its existence
+        //If on submission, both credentials are submitted, send them to the server to check authorization
         if (credentials.email && credentials.password) {
             try {
                 const response = await fetch('/api/users/login', {
@@ -28,7 +28,7 @@ const LogInModal = ({ isOpen, onClose }) => {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ email: credentials.email, password: credentials.password })
+                    body: JSON.stringify(credentials)
                 });
 
                 if (!response.ok) {
