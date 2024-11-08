@@ -19,26 +19,16 @@ const LogInModal = ({ isOpen, onClose }) => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         setFormErrorMessage(null);
-        
-        //Check that correct value is being submitted right now
-        console.log(event.currentTarget.email.value);
-
-        //Set the value of the username input field to be stored in username variable
-        const email = event.currentTarget.email.value;
-
-        //Create variable for the password
-        const password = event.currentTarget.password.value;
-        console.log(password);
 
         //If on submission, there is a username submitted, send it to the server to check its existence
-        if (email && password) {
+        if (credentials.email && credentials.password) {
             try {
                 const response = await fetch('/api/users/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ email: email, password: password })
+                    body: JSON.stringify({ email: credentials.email, password: credentials.password })
                 });
 
                 if (!response.ok) {
@@ -75,7 +65,7 @@ const LogInModal = ({ isOpen, onClose }) => {
     //State to hold inputted information
     const [credentials, setCredentials] = useState({});
 
-    //Create handleChange function to update state holding inputs
+    //Update state holding inputs as the user types
     const handleChange = (event) => {
         //Pull name associated with question -> will translate to column name in database
         const name = event.target.name;
