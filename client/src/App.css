@@ -21,11 +21,10 @@ h1, h2, h3, h4 {
 }
 
 /* Navbar Styles */
-nav {
+.nav {
     background-color: #b1b695;
     display: flex;
-    justify-content: space-between;
-    padding: 0px 15px;
+    padding: 0px 5%;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
     font-family: "DynaPuff", system-ui;
@@ -36,6 +35,18 @@ nav {
       "wdth" 100;
 
     align-items: center;
+}
+
+.logo {
+    margin-right: 30%;
+}
+
+.tabs {
+    display: flex;
+    gap: 70px;
+    margin-left: 5%;
+    margin-right: 5%;
+    font-size: 1.1rem;
 }
 
 nav h1:hover {
@@ -96,4 +107,3 @@ button:hover {
 .general {
     padding: 1.5rem;
 }
-
