@@ -11,6 +11,10 @@ body {
     padding: 0;
 }
 
+main {
+    padding: 20px 60px;
+}
+
 h1, h2, h3, h4 {
     font-family: "DynaPuff", system-ui;
     font-optical-sizing: auto;
@@ -104,6 +108,40 @@ button:hover {
     text-align: center;
 }
 
+/* Home Page */
 .general {
-    padding: 1.5rem;
+    text-align: center;
+}
+/* 
+.general h1 {
+    text-align: left;
+} */
+.general-description {
+    padding: 0% 15%;
+}
+
+.homepage {
+    padding: 0% 10%;
+}
+
+.homepage-columnA {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+}
+
+.homepage-columnB {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.homepage-picture {
+    width: 50%;
 }
