@@ -25,8 +25,8 @@ const NavBar = () => {
             {/* Replace header with logo in the future */}
             
             {loggedUser
-            ? <h1 onClick={() => navigate('/dashboard')} className="nav">Click and Treat</h1>
-            : <h1 onClick={() => navigate('/homepage')} className="nav">Click and Treat</h1>}
+            ? <h1 onClick={() => navigate('/dashboard')} className="nav">🐾 Click and Treat 🐾</h1>
+            : <h1 onClick={() => navigate('/homepage')} className="nav">🐾 Click and Treat 🐾</h1>}
             
             <p onClick={() => navigate('/about')}>About</p>
             <p onClick={() => navigate('/examples')}>Example Training Plans</p>
