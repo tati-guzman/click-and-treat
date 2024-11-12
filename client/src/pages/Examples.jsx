@@ -17,7 +17,7 @@ const Examples = () => {
     
     return (
         <MainLayout>
-            <div className="general">
+            <div className="general" data-testid="examples-page">
                 <h1>What's in a Training Plan?</h1>
                 <p>Each training plans offers a description of the skill being taught and a breakdown of each stage your pet should be comfortable in before moving forward. For example, it's hard to get your dog to sit between your legs if they're not comfortable even walking through them! Our plan for "Middle" details each stage to set you and your pet up for success as you take on the challenge.</p>
 
