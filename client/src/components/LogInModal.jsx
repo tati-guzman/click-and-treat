@@ -21,8 +21,9 @@ const LogInModal = ({ isOpen, onClose }) => {
         setFormErrorMessage(null);
 
         //If on submission, both credentials are submitted, send them to the server to check authorization
-        if (credentials.email && credentials.password) {
+        if (credentials.email && credentials.password && credentials.password.replace(/\s/g, '').length !== 0) {
             try {
+                //Need to add encryption to password so it's sent securely
                 const response = await fetch('/api/users/login', {
                     method: 'POST',
                     headers: {
@@ -43,7 +44,7 @@ const LogInModal = ({ isOpen, onClose }) => {
                     setLoggedUser({userId: userStatus.userId, name: userStatus.name});
                     
                     //Store access token locally to be used for authorization of all server calls
-                    localStorage.setItem("token", userStatus.accessToken);
+                    localStorage.setItem("CaT_Token", userStatus.accessToken);
 
                     //Switch to dashboard display
                     navigate('/dashboard');
