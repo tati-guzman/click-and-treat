@@ -64,7 +64,7 @@ const HistoryList = () => {
         //Future Tasks: When family connection is implemented, also include user in this display!
         return sessionsPulled.map((session, index) => (
                 <div className="session-card" key={index}>
-                    <h3>Session Date: {formatDate(session.date)} <FontAwesomeIcon onClick={() => openDetails(session)} icon={faCircleInfo} className="info-icon" /></h3>
+                    <h3>Session Date: {formatDate(session.date)}</h3>
                     <p key={index}>Main Focus: Stage {session.stage}</p>
                     <p key={"notes" + index}>Notes: {session.notes ? session.notes : "N/A"}</p>
                     
