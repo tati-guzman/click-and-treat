@@ -172,4 +172,15 @@ button:hover {
     padding: 5px;
 }
 
+/* Dashboard */
+.dashboard {
+    font-size: 1.2rem;
+
+}
+
+.motivation {
+    display: flex;
+    justify-content: right;
+}
+
 
