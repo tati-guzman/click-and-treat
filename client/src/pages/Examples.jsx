@@ -17,7 +17,7 @@ const Examples = () => {
     
     return (
         <MainLayout>
-            <div className="general">
+            <div className="general center">
                 <h1>What's in a Training Plan?</h1>
                 <p>Each training plans offers a description of the skill being taught and a breakdown of each stage your pet should be comfortable in before moving forward. For example, it's hard to get your dog to sit between your legs if they're not comfortable even walking through them! Our plan for "Middle" details each stage to set you and your pet up for success as you take on the challenge.</p>
 
@@ -25,7 +25,7 @@ const Examples = () => {
                 <h3>Middle: This cue should result in your pet sitting between your legs facing forward.</h3>
 
                 {middleStagesArray.map((stage, index) => (
-                    <div key={index}>
+                    <div key={index} className="card">
                         <h3>{stage[0]}:</h3>
                         <p>{stage[1]}</p>
                     </div>
