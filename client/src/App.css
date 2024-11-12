@@ -297,3 +297,10 @@ textarea {
     color: #bc2d45;
     cursor: pointer;
 }
+
+.table {
+    display: flex;
+    flex-direction: column;
+    margin: 0% 10%;
+    text-align: left;
+}
