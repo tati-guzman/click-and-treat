@@ -1,8 +1,12 @@
 //Import necessary functionalities
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const SessionForm = ({ state }) => {
-
+    
+    //Use useNavigate hook from React Router to establish functionality in buttons below
+    const navigate = useNavigate();
+    
     //State to hold all form inputs - will end up being an object with each question/answer as a key:value pair
     const [inputs, setInputs] = useState({});
 
@@ -40,6 +44,8 @@ const SessionForm = ({ state }) => {
 
         //Check that date and stage are both submitted
         if (!inputs.date || !inputs.stage) {
+            setSuccessMessage(false);
+            
             //Toggle error messages on and exit the function
             if (!inputs.date) {
                 setDateErrorMessage(true);
@@ -56,6 +62,7 @@ const SessionForm = ({ state }) => {
             setDateErrorMessage(false);
             setStageErrorMessage(false);
             setFormErrorMessage(false);
+            setSuccessMessage(false);
         }
         
         //If "proceed" question was answered and set as true, check to see if their skill status needs to be updated - we will only update if they practiced a stage = or > than their skill level
@@ -118,12 +125,12 @@ const SessionForm = ({ state }) => {
     //To-Do: Update handleSubmit to POST all the information && update server POST request to also update the status in the subscriptions table if the proceed column is true
     
     return (
-            <div>
+            <div className="list">
                 <h2>Today's Session Details</h2>
 
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} className="session-form">
                     
-                    <label htmlFor="date">Date of Training Session</label><br></br>
+                    <label htmlFor="date" className="session-label">Date of Training Session</label>
                     <input 
                         id="date"
                         name="date"
@@ -131,50 +138,52 @@ const SessionForm = ({ state }) => {
                         required
                         value={inputs.date || ""}
                         onChange={handleChange}
-                    /><br></br><br></br>
-                    {dateErrorMessage && <p>Please enter the date this session took place.</p>}
+                    />
+                    {dateErrorMessage && <p className="error">Please enter the date this session took place.</p>}
 
-                    <label>Which stage did you focus on today? Please select the stage you spent the most time reinforcing.</label><br></br>
-                    {
-                        stageKeys.map((stage, index) => (
-                            <div key={index}>
-                                <label key={index}>
-                                    <input
-                                    id={stage}
-                                    name="stage"
-                                    type="radio"
-                                    value={index + 1}
-                                    checked={(inputs.stage === (index + 1).toString())}
-                                    onChange={handleChange}
-                                    />
-                                    {index + 1}
-                                    </label>
-                            </div>
-                        ))
-                    }
-                    {stageErrorMessage && <p>Please select which stage was practiced during this session. A selection is required.</p>}<br></br><br></br>
+                    <label className="session-label">Which stage did you focus on today? Please select the stage you spent the most time reinforcing.</label>
+                    <div className="form-stages">
+                        {
+                            stageKeys.map((stage, index) => (
+                                <div key={index}>
+                                    <label key={index}>
+                                        <input
+                                        id={stage}
+                                        name="stage"
+                                        type="radio"
+                                        value={index + 1}
+                                        checked={(inputs.stage === (index + 1).toString())}
+                                        onChange={handleChange}
+                                        />
+                                        {index + 1}
+                                        </label>
+                                </div>
+                            ))
+                        }
+                    </div>
+                    {stageErrorMessage && <p className="error">Please select which stage was practiced during this session. A selection is required.</p>}
 
-                    <label htmlFor="tasks">Which tasks did you complete today?</label><br></br>
+                    <label htmlFor="tasks" className="session-label">Which tasks did you complete today?</label>
                     <textarea 
                         id="tasks"
                         name="tasks"
                         value={inputs.tasks || ""}
                         onChange={handleChange}
                         placeholder="e.g. Practiced lure back and forth between legs 10 times"
-                    /><br></br><br></br>
+                    />
 
-                    <label htmlFor="notes">Notes: </label><br></br>
+                    <label htmlFor="notes" className="session-label">Notes: </label>
                     <textarea 
                         id="notes"
                         name="notes"
                         value={inputs.notes || ""}
                         onChange={handleChange}
                         placeholder="Was there any confusion? Any successes to highlight?"
-                    /><br></br><br></br>
+                    />
 
                     {state.status !== "Mastered" 
                     ?   <div>
-                            <label>Are you and {state.petName} ready for the next stage?</label><br></br>
+                            <label className="session-label">Are you and {state.petName} ready for the next stage?</label><br></br>
                             <label htmlFor="yes-proceed"><input 
                                 id="yes-proceed"
                                 name="proceed"
@@ -182,7 +191,7 @@ const SessionForm = ({ state }) => {
                                 value="true"
                                 checked={inputs.proceed === true}
                                 onChange={() => setInputs(prevInputs => ({ ...prevInputs, "proceed": true }))}
-                            />Yes</label><br></br>
+                            />Yes</label>
                             <label htmlFor="no-proceed"><input 
                                 id="no-proceed"
                                 name="proceed"
@@ -192,14 +201,16 @@ const SessionForm = ({ state }) => {
                                 onChange={() => setInputs(prevInputs => ({ ...prevInputs, "proceed": false }))}
                             />No</label>
                         </div>
-                    :   null }<br></br><br></br>
+                    :   null }
                     
-                    {formErrorMessage && <p>Oops! We're having trouble submitting your form. Please try again.</p>}
-                    {successMessage && <p>Woohoo! Your session was submitted successfully. To view your session details and updates to your pets progress, go to "View History".</p>}
-
-                    <button type="submit">Save Session</button>
-                    <button onClick={clearForm}>Cancel</button>
-
+                    {formErrorMessage && <p className="error">Oops! We're having trouble submitting your form. Please try again.</p>}
+                    {successMessage && <p className="success">Woohoo! Your session was submitted successfully. To view your session details and updates to your pets progress, go to "View History".</p>}
+                    
+                    <div className="row centered">
+                        <button type="submit">Save Session</button>
+                        <button onClick={() => navigate('/history/', { state: { ...state }})}>View History</button>
+                        <button onClick={clearForm}>Cancel</button>
+                    </div>
                     {/* Stretch goal: Implement draft functionality and add "Save Draft" button */}
 
                 </form>
