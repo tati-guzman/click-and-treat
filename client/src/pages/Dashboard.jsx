@@ -23,7 +23,7 @@ const Dashboard = () => {
             <div className="dashboard">
                 <h1>Welcome back, {loggedUser.name}!</h1>
 
-                <div className="pet-plan-info">
+                <div className="equal-display">
                     <UserTrainingPlans selectedPet={selectedPet}/>
 
                     <PetInfo setSelectedPet={setSelectedPet}/>

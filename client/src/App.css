@@ -163,7 +163,7 @@ button:hover {
     border-radius: 20px;
 }
 
-/* Stages Cards */
+/* Cards */
 .card {
     border: solid 2px #6d1a36;
     border-radius: 20px;
@@ -173,17 +173,17 @@ button:hover {
     font-size: 1.3rem;
 }
 
-/* Dashboard */
-.dashboard {
-    font-size: 1.2rem;
-
-}
-
-.pet-plan-info {
+/* Side by Side Pages */
+.equal-display {
     display: flex;
     gap: 60px;
     margin: 50px 5px;
     justify-content: center;
+}
+
+/* Dashboard */
+.dashboard {
+    font-size: 1.2rem;
 }
 
 .list {

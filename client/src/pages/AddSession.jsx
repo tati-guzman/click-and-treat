@@ -18,11 +18,13 @@ const AddSession = () => {
         <MainLayout>
             <div className="general">
                 <h1>{state.petName}'s Training Session for "{state.title}"</h1>
-                <p>Highest Skill Status Reached: {state.status}</p>
+                <h2>Highest Skill Status Reached: {state.status}</h2>
 
-                <SessionBreakdown state={state} />
+                <div className="equal-display">
+                    <SessionBreakdown state={state} />
 
-                <SessionForm state={state} />
+                    <SessionForm state={state} />
+                </div>
 
                 <button onClick={() => navigate('/history/', { state: { ...state }})}>View History</button>
             </div>
