@@ -66,18 +66,19 @@ const UserTrainingPlans = ({ selectedPet }) => {
     }
     
     return (
-        <div className="plans">
+        <div className="list">
+            {selectedPet ? <h1>{selectedPet.petName}'s Training Plans</h1> : <h1>Training Plans</h1>}
+            
             {selectedPet
             ?   <div>
-                    <h1>{selectedPet.petName}'s Training Plans</h1>
                     {displayPlans()}
-                </div>
-            :   <div>
-                    <h1>Training Plans</h1>
-                    <p>*Please select a pet to view their subscribed plans*</p>
-                </div>}
+                </div>  
+            :   
+                <p>*Please select a pet to view their subscribed plans*</p>
+            }
 
             {/* Add New Plan button (stretch goal): Pulls up component that lists all public plans and has buttons to subscribe to that plan. Also include the "Create Plan" button so users access the form to create their own private plan */}
+            <button>Add New Training Plan +</button>
         </div>
     )
 }

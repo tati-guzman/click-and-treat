@@ -85,9 +85,9 @@ const PetInfo = ({ setSelectedPet }) => {
     }
 
     return (
-        <div className="pet-list">
+        <div className="list">
             <h1>Your Pets</h1>
-            
+
             {petInfo ? formatPetDisplay() : <p>No pets associated with this account</p>}
 
             <button onClick={()=>{navigate("/account")}}>Add More Pets +</button>

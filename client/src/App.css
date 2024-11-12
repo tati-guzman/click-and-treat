@@ -186,18 +186,7 @@ button:hover {
     justify-content: center;
 }
 
-.plans {
-    /* display: flex; */
-    /* flex-direction: column; */
-    width: 40%;
-    /* padding: 0px 10px; */
-    text-align: center;
-
-    /* background-color: #f1e4d1; */
-    background-color: #f7e8c6;
-    border-radius: 30px;
-}
-.pet-list {
+.list {
     display: flex;
     flex-direction: column;
     
