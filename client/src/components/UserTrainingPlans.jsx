@@ -55,7 +55,7 @@ const UserTrainingPlans = ({ selectedPet }) => {
             return <p>There are no training plans linked to this pet!</p>
         } else {
             return trainingPlans.map((plan, index) => (
-                <div key={index}>
+                <div className="card pet" key={index}>
                     <p>Skill Name: {plan.title}</p>
                     <p>Skill Status: {plan.status}</p>
                     <button onClick={() => navigate('/session', {state: {...plan, petName: selectedPet.petName }})}>Add Session</button>
