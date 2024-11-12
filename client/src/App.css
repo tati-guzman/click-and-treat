@@ -133,7 +133,6 @@ button:hover {
     width: 50%;
     justify-content: center;
     margin: 0px 50px;
-    font-size: 1.2rem;
 }
 
 .row {
@@ -153,9 +152,9 @@ button:hover {
 /* About Page */
 .about {
     text-align: center;
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     line-height: 1.5;
-    margin: 0px 70px;
+    margin: 0px 90px;
 }
 
 .about-pictures {
@@ -182,7 +181,6 @@ button:hover {
 
 .pet-plan-info {
     display: flex;
-    flex-wrap: wrap;
     gap: 60px;
     margin: 50px 5px;
     justify-content: center;
@@ -202,15 +200,33 @@ button:hover {
 .pet-list {
     display: flex;
     flex-direction: column;
-    /* justify-content: center; */
     
     width: 40%;
-    /* padding: 0px 10px; */
     text-align: center;
 
     background-color: #f7e8c6;
     border-radius: 30px;
     padding: 0px 15px 10px;
+}
+
+.pet-icon {
+    height: 75px;
+}
+
+.pet-row {
+    display: flex;
+}
+
+.icon-side {
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    justify-content: center;
+}
+
+.pet {
+    width: 70%;
+    margin: 10px 15%;
 }
 
 .motivation {
