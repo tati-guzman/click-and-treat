@@ -1,6 +1,12 @@
-//Import frameworks for app
+//----------------------------------- General Set Up --------------------------------
+import dotenv from 'dotenv';
+dotenv.config();
+
+//Import frameworks for app and log in
 import express from 'express';
 import cors from 'cors';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 //PROD: Import frameworks for deployment
 // import path, { dirname } from 'path';
@@ -15,6 +21,7 @@ const PORT = process.env.PORT || 8030;
 app.use(cors());
 app.use(express.json());
 
+// ********** PRODUCTION CODE *********
 //PROD: Construct path to build folder in ES Modules
 // const __filename = fileURLToPath(import.meta.url);
 // const __dirname = dirname(__filename);
@@ -27,10 +34,114 @@ app.use(express.json());
 //     res.sendFile(path.join(__dirname, '../client/dist', 'index.html'))
 // })
 
-//All Planned Routes
+//----------------------------------- All Routes --------------------------------
 
-//POST Route to create a new user - UPDATE ONCE LOG IN IS COMPLETE
-//'/users'
+//********* ACCOUNT AND LOG IN SECTION **********
+
+//Function to check access tokens before authorizing the route
+const checkAccessToken = (req, res, next) => {
+    //Pull access token from the request headers
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token) {
+        return res.status(401).json({ authorized: false, details: "Error finding Access Token" });
+    }
+
+    try {
+        //Verify the token that was sent
+        const verifiedUser = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        req.user = verifiedUser;
+        next();
+    } catch (error) {
+        res.status(403).json({ authorized: false, details: "Token not valid", error: error });
+    }
+}
+
+//POST Route to create a new user account
+app.post('/api/users/new', async (req, res) => {
+    console.log("Creating new user account! Welcome!");
+    
+    try {
+        //Deconstruct the request body to use in the queries
+        const { name, email, password } = req.body;
+
+        //Check that the user does not already exist
+        const checkUserQuery = 'SELECT EXISTS(SELECT email FROM users WHERE email = $1)';
+        const checkUser = await db.query(checkUserQuery, [email]);
+
+        if (checkUser.rows.length < 1) {
+            //If there is no response (should be true or false) send error to client
+            throw new Error ("Error checking username existence");
+        } else if (checkUser.rows[0].exists) {
+            //If the response is true, this user already exists. Exit request and send status to client for error handling.
+            res.json({ newUser: false });
+        } else {
+            //Create a hashed password using bcrypt and salt rounds
+            const hashedPassword = await bcrypt.hash(password, 10);
+
+            //Send query to post new user info with hashed password
+            const createUserQuery = 'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING name, user_id';
+            const createUser = await db.query(createUserQuery, [name, email, hashedPassword]);
+            
+            if (createUser.rows.length < 1) {
+                throw new Error ("Error creating new user");
+            } else {
+                 //Store new values to send back to client for display
+                const newUser = createUser.rows[0];
+                const userId = newUser.user_id;
+                const name = newUser.name;
+
+                //Create JWT Access Token to use for authorization
+                const accessToken = jwt.sign({ userId: userId } , process.env.ACCESS_TOKEN_SECRET);
+
+                //Send back all needed info to sign user in immediately
+                res.status(200).json({ newUser: true, name: name, userId: userId, accessToken: accessToken });
+            }
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Unable to create new user", details: error });
+    }
+})
+
+//POST Route to log user in
+app.post('/api/users/login', async (req, res) => {
+    console.log("Logging in user!");
+    
+    try {
+        //Deconstruct the request body to use in the queries
+        const { email, password } = req.body;
+
+        //Check that the user exists and return user data if so
+        const checkUserQuery = 'SELECT * FROM users WHERE email = $1';
+        const checkUser = await db.query(checkUserQuery, [email]);
+
+        if (checkUser.rows.length < 1) {
+            //No rows are returned when the email is not found - send error handling
+            res.json({ exists: false, error: "User details not found." });
+        } else {
+            //Pull out data returned from query
+            const userData = checkUser.rows[0];
+
+            //Compare the stored password with the password entered by user
+            if (await bcrypt.compare(password, userData.password)) {
+                //Pull out relevant variables from userData
+                const userId = userData.user_id;
+                const name = userData.name;
+
+                //Create JWT Access Token to use for authorization
+                const accessToken = jwt.sign({ userId: userId } , process.env.ACCESS_TOKEN_SECRET);
+                
+                //Send back the info we want and the access token
+                res.status(200).json({ exists: true, authorized: true, userId: userId, name: name, accessToken: accessToken });
+            } else {
+                res.json({ exists: true, authorized: false, error: "Incorrect password" });
+            }
+        } 
+    } catch (error) {
+        res.status(500).send({ message: "Unable to log in user", details: error });
+    }
+})
 
 //POST Route to check log in by checking username (using for testing only) - Also use for family connection!
 app.post('/api/users/', async (req, res) => {

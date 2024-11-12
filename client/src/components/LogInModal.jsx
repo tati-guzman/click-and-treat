@@ -1,5 +1,5 @@
 //Import necessary functionalities
-import React from 'react';
+import React, { useState } from 'react';
 import { UserStatus } from '../context/UserContext.jsx';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,26 +13,23 @@ const LogInModal = ({ isOpen, onClose }) => {
     //Call useNavigate hook to change component display upon log in
     const navigate = useNavigate();
 
+    //State to hold various error messages
+    const [formErrorMessage, setFormErrorMessage] = useState(null);
+
     const handleSubmit = async (event) => {
         event.preventDefault();
-        
-        //Check that correct value is being submitted right now
-        console.log(event.currentTarget.username.value);
+        setFormErrorMessage(null);
 
-        //Set the value of the username input field to be stored in username variable
-        const username = event.currentTarget.username.value;
-
-        //Future Plans: Add in password functionality - OAuth?
-
-        //If on submission, there is a username submitted, send it to the server to check its existence
-        if (username) {
+        //If on submission, both credentials are submitted, send them to the server to check authorization
+        if (credentials.email && credentials.password && credentials.password.replace(/\s/g, '').length !== 0) {
             try {
-                const response = await fetch('/api/users/', {
+                //Need to add encryption to password so it's sent securely
+                const response = await fetch('/api/users/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ username })
+                    body: JSON.stringify(credentials)
                 });
 
                 if (!response.ok) {
@@ -42,49 +39,77 @@ const LogInModal = ({ isOpen, onClose }) => {
                 const userStatus = await response.json();
 
                 //If there is a user with this username, log them in
-                if (userStatus.exists) {
-                    
+                if (userStatus.exists && userStatus.authorized) {
                     //Set the logged user state to the user id we will need to get the correct data
                     setLoggedUser({userId: userStatus.userId, name: userStatus.name});
+                    
+                    //Store access token locally to be used for authorization of all server calls
+                    localStorage.setItem("CaT_Token", userStatus.accessToken);
 
                     //Switch to dashboard display
                     navigate('/dashboard');
                     
-                    //Potentially use to combat losing user on refresh:
-                    // localStorage.setItem("user", userStatus.userId);
-
                     //Close the modal
                     onClose();
                 } else {
-                    //Client side error handling to ask them to try again - need to update once log in is fleshed out
-                    console.log("Username does not exist.");
+                    setFormErrorMessage("Invalid username or password.");
                 }
             } catch (error) {
-                //Update this error handling as well once log in is complete
-                console.error({ message: "Error checking user name", details: error });
+                setFormErrorMessage("Please try again.");
+                console.error({ message: "Error checking credentials", details: error });
             }
         } else {
-            //Placeholder alert for temporary error handling - will implement robust form error handling while building out full log in component in Week 3
-            alert("Please make sure to enter a username.");
+            setFormErrorMessage("Please enter a username and password.");
         }
     }
 
+    //State to hold inputted information
+    const [credentials, setCredentials] = useState({});
 
+    //Update state holding inputs as the user types
+    const handleChange = (event) => {
+        //Pull name associated with question -> will translate to column name in database
+        const name = event.target.name;
+
+        //Pull value inputted to answer field to save for form submission
+        const value = event.target.value;
+
+        //Update credentials state to hold all inputted answers
+        setCredentials(prevCredentials => ({ ...prevCredentials, [name]: value }));
+    }
+
+    //Function to clear inputs and exit modal
+    const cancel = () => {
+        setCredentials({});
+        onClose();
+    }
     
     return (
         <div className="modal-overlay" onClick={onClose}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <form onSubmit={handleSubmit}>
-                    <label htmlFor="username">Pick User</label><br></br>
-                    <select name="username">
-                        <option key="1" value="user1">Test User 1</option>
-                        <option key="2" value="user2">Test User 2</option>
-                        <option key="3" value="user3">Test User 3</option>
-                        <option key="4" value="user4">Test User 4</option>
-                        <option key="5" value="user5">Test User 5</option>        
-                    </select>
+                    <label htmlFor="email">Email</label><br></br>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={credentials.email || ""}
+                        onChange={handleChange}
+                    /><br></br><br></br>
 
+                    <label htmlFor="password">Password</label><br></br>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        value={credentials.password || ""}
+                        onChange={handleChange}
+                    /><br></br><br></br>
+                    
                     <button type="submit">Log In</button>
+                    <button onClick={cancel}>Cancel</button>
+
+                    {formErrorMessage ? <p>{formErrorMessage}</p> : null}
                 </form>
             </div>
         </div>
