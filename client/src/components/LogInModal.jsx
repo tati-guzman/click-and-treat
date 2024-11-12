@@ -21,7 +21,7 @@ const LogInModal = ({ isOpen, onClose }) => {
         setFormErrorMessage(null);
 
         //If on submission, both credentials are submitted, send them to the server to check authorization
-        if (credentials.email && credentials.password) {
+        if (credentials.email && credentials.password && credentials.password.replace(/\s/g, '').length !== 0) {
             try {
                 const response = await fetch('/api/users/login', {
                     method: 'POST',
