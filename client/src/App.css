@@ -112,13 +112,10 @@ button:hover {
 .general {
     text-align: center;
 }
-/* 
-.general h1 {
-    text-align: left;
-} */
+
 .general-description {
     padding: 0% 15%;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
 }
 
 .homepage {
@@ -131,6 +128,7 @@ button:hover {
     width: 50%;
     justify-content: center;
     margin: 0px 50px;
+    font-size: 1.2rem;
 }
 
 .row {
@@ -145,4 +143,18 @@ button:hover {
     height: 300px;
     border-radius: 25px;
     margin: 0px 50px;
+}
+
+/* About Page */
+.about {
+    text-align: center;
+    font-size: 1.2rem;
+    line-height: 1.5;
+    margin: 0px 70px;
+}
+
+.about-pictures {
+    height: 500px;
+    margin: 0px 25px;
+    border-radius: 20px;
 }
