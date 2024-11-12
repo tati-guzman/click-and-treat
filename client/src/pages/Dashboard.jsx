@@ -20,12 +20,14 @@ const Dashboard = () => {
 
     return (
         <MainLayout>
-            <div className="general">
-                <h2>Welcome back, {loggedUser.name}!</h2>
+            <div className="dashboard">
+                <h1>Welcome back, {loggedUser.name}!</h1>
 
-                <PetInfo setSelectedPet={setSelectedPet}/>
-    
-                <UserTrainingPlans selectedPet={selectedPet}/>
+                <div className="pet-plan-info">
+                    <UserTrainingPlans selectedPet={selectedPet}/>
+
+                    <PetInfo setSelectedPet={setSelectedPet}/>
+                </div>
 
                 <MotivationalQuotes />
             </div>

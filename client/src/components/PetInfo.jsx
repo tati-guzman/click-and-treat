@@ -42,7 +42,7 @@ const PetInfo = ({ setSelectedPet }) => {
     //Function to format pet information in display
     const formatPetDisplay = () => {
         return petInfo.map((pet, index) => (
-            <div key={index}>
+            <div className="card" key={index}>
                 <p>Pet Name: {pet.name}</p>
                 <p>Species: {pet.species}</p>
                 <button onClick={() => selectPet(index)}>View Training Plans</button>
@@ -59,7 +59,7 @@ const PetInfo = ({ setSelectedPet }) => {
     }
 
     return (
-        <div>
+        <div className="pet-list">
             <h1>Your Pets</h1>
             
             {petInfo ? formatPetDisplay() : <p>No pets associated with this account</p>}

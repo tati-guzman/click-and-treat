@@ -170,6 +170,8 @@ button:hover {
     border-radius: 20px;
     margin: 10px;
     padding: 5px;
+    background-color: #fcd0a1;
+    font-size: 1.3rem;
 }
 
 /* Dashboard */
@@ -178,9 +180,43 @@ button:hover {
 
 }
 
+.pet-plan-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 60px;
+    margin: 50px 5px;
+    justify-content: center;
+}
+
+.plans {
+    /* display: flex; */
+    /* flex-direction: column; */
+    width: 40%;
+    /* padding: 0px 10px; */
+    text-align: center;
+
+    /* background-color: #f1e4d1; */
+    background-color: #f7e8c6;
+    border-radius: 30px;
+}
+.pet-list {
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    
+    width: 40%;
+    /* padding: 0px 10px; */
+    text-align: center;
+
+    background-color: #f7e8c6;
+    border-radius: 30px;
+    padding: 0px 15px 10px;
+}
+
 .motivation {
     display: flex;
     justify-content: right;
+    margin: 40px 0px;
 }
 
 
