@@ -3,6 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserStatus } from '../context/UserContext';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShieldDog, faShieldCat, faPaw } from '@fortawesome/free-solid-svg-icons';
+
+
 const PetInfo = ({ setSelectedPet }) => {
 
     //Use useNavigate hook from React Router to establish functionality in buttons below
@@ -41,13 +45,35 @@ const PetInfo = ({ setSelectedPet }) => {
 
     //Function to format pet information in display
     const formatPetDisplay = () => {
-        return petInfo.map((pet, index) => (
-            <div key={index}>
-                <p>Pet Name: {pet.name}</p>
-                <p>Species: {pet.species}</p>
+        return petInfo.map((pet, index) => {
+            let petIcon;
+
+            switch (pet.species) {
+                case "Cat":
+                    petIcon = <FontAwesomeIcon className="pet-icon" icon={faShieldCat} />;
+                    break;
+                case "Dog":
+                    petIcon = <FontAwesomeIcon className="pet-icon" icon={faShieldDog} />;
+                    break;
+                default:
+                    petIcon = <FontAwesomeIcon className="pet-icon" icon={faPaw} />;
+                    break;
+            }
+            
+            return (
+            <div className="card pet" key={index}>
+                <div className="pet-row">
+                    <div className="icon-side">{petIcon}</div>
+                    <div>
+                        <p>Pet Name: {pet.name}</p>
+                        <p>Species: {pet.species}</p>
+                    </div>
+                </div>
+    
                 <button onClick={() => selectPet(index)}>View Training Plans</button>
             </div>
-        ))        
+            );
+        })        
     }
 
     //Function to set selected pet state for use in UserTrainingPlans component
@@ -59,9 +85,9 @@ const PetInfo = ({ setSelectedPet }) => {
     }
 
     return (
-        <div>
+        <div className="list">
             <h1>Your Pets</h1>
-            
+
             {petInfo ? formatPetDisplay() : <p>No pets associated with this account</p>}
 
             <button onClick={()=>{navigate("/account")}}>Add More Pets +</button>

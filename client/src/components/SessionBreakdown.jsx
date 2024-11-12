@@ -13,7 +13,7 @@ const SessionBreakdown = ({ state }) => {
         //[["stage 1", "details"], ["stage 2", "details"]]
 
         return stageDetails.map((stage, index) => (
-            <div key={index}>
+            <div className="card" key={index}>
                 <h3>{stage[0]}:</h3>
                 <p>{stage[1]}</p>
             </div>
@@ -21,7 +21,7 @@ const SessionBreakdown = ({ state }) => {
     }
   
     return (
-            <div>
+            <div className="list">
                 <h2>Training Stages & Details</h2>
 
                 <div>

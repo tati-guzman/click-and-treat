@@ -12,10 +12,10 @@ const LogIn = () => {
     const [newAccountModal, setNewAccountModal] = useState(false);
 
     return (
-        <div>
+        <div className="nav-login">
             
-            <button onClick={()=> setLogInModal(true)} className="nav">Log In</button>
-            <button onClick={()=> setNewAccountModal(true)} className="nav">Create an Account</button>
+            <button onClick={()=> setLogInModal(true)}>Log In</button>
+            <button onClick={()=> setNewAccountModal(true)}>Create an Account</button>
 
             {logInModal && <LogInModal isOpen={logInModal} onClose={() => setLogInModal(false)}/>}
             {newAccountModal && <NewAccountModal isOpen={newAccountModal} onClose={() => setNewAccountModal(false)}/>}

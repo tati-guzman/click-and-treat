@@ -49,7 +49,7 @@ const MotivationalQuotes = () => {
     const [quoteError, setQuoteError] = useState(false);
 
     return (
-        <div>
+        <div className="motivation">
             
             <button onClick={() => {setQuoteModal(true)}}>Feeling Stressed? Click Here for Motivation!</button>
 

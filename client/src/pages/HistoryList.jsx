@@ -4,6 +4,9 @@ import MainLayout from '../layout/MainLayout';
 import { useLocation, useNavigate } from 'react-router-dom';
 import SessionDetails from '../components/SessionDetails';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+
 const HistoryList = () => {
 
     //Use useNavigate hook from React Router to establish functionality in buttons below
@@ -58,13 +61,13 @@ const HistoryList = () => {
 
     //Function to map through the session information and format display of the sessions
     const displaySessions = () => {
-
         //Future Tasks: When family connection is implemented, also include user in this display!
         return sessionsPulled.map((session, index) => (
-                <div key ={index}>
+                <div className="session-card" key={index}>
                     <h3>Session Date: {formatDate(session.date)}</h3>
                     <p key={index}>Main Focus: Stage {session.stage}</p>
                     <p key={"notes" + index}>Notes: {session.notes ? session.notes : "N/A"}</p>
+                    
                     <button onClick={() => openDetails(session)}>View Details</button>
                 </div>
         ))
@@ -107,7 +110,7 @@ const HistoryList = () => {
                 : <h2>Highest Status Reached: {highestStatus}</h2>}
 
                 {sessionsPulled
-                ? displaySessions()
+                ? <div className="session-list">{displaySessions()}</div>
                 : <p>{petName} does not have any sessions recorded for "{title}". Return to Dashboard to select a new skill/pet to view or add a new training session!</p>}
 
                 {detailsModal && <SessionDetails selectedSession={selectedSession} isOpen={detailsModal} onClose={closeModal} />}
